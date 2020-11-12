@@ -32,7 +32,7 @@ class CameraActivity : AppCompatActivity() {
 
     @JvmStatic
     fun start(context: Fragment, options: Options) {
-      PermUtil.checkForCamaraWritePermissions(context, object : WorkFinish {
+      PermUtil.checkForCameraWritePermissions(context, object : WorkFinish {
         override fun onWorkFinish(check: Boolean) {
           context.startActivityForResult(
             Intent(
@@ -53,7 +53,7 @@ class CameraActivity : AppCompatActivity() {
 
     @JvmStatic
     fun start(context: FragmentActivity, options: Options) {
-      PermUtil.checkForCamaraWritePermissions(context, object : WorkFinish {
+      PermUtil.checkForCameraWritePermissions(context, object : WorkFinish {
         override fun onWorkFinish(check: Boolean) {
           context.startActivityForResult(
             Intent(
