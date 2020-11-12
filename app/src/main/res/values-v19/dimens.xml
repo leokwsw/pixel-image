@@ -1,0 +1,4 @@
+<resources>
+  <dimen name="margin_top">24dp</dimen>
+  <dimen name="margin_top_nve">-24dp</dimen>
+</resources>

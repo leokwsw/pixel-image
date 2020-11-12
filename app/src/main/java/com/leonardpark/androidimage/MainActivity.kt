@@ -1,22 +1,54 @@
 package com.leonardpark.androidimage
 
+import android.content.pm.PackageManager
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.leonardpark.pixel.CameraActivity
+import com.leonardpark.pixel.Options
+import com.leonardpark.pixel.utility.PermUtil
+import kotlinx.android.synthetic.main.activity_main.*
+import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
+
+  private val requestCodePicker = 100
+  private var returnValue = ArrayList<String>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    setSupportActionBar(findViewById(R.id.toolbar))
+    setSupportActionBar(toolbar)
 
-    findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-      Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-          .setAction("Action", null).show()
+    fab.setOnClickListener {
+      CameraActivity.start(this, Options.init()
+        .setRequestCode(requestCodePicker)
+        .setCount(5)
+        .setFrontFacing(false)
+        .setPreSelectedUrls(returnValue)
+        .setExcludeVideos(false)
+        .setSpanCount(4)
+        .setVideoDurationLimitInSeconds(30)
+        .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)
+        .setPath("pix/akshay"))
+    }
+  }
+
+  override fun onRequestPermissionsResult(
+    requestCode: Int,
+    permissions: Array<out String>,
+    grantResults: IntArray
+  ) {
+    when (requestCode) {
+      PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          CameraActivity.start(this, Options.init())
+        } else {
+          Toast.makeText(this, "Approve permissions to open Image Picker", Toast.LENGTH_LONG).show()
+        }
+      }
     }
   }
 
