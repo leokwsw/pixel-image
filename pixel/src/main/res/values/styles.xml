@@ -3,6 +3,11 @@
 
   </style>
 
+  <style name="AppTheme.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+  </style>
+
   <style name="CameraTabLayoutTextStyle" parent="TextAppearance.AppCompat">
     <item name="android:textSize">14sp</item>
     <item name="android:textAllCaps">true</item>
