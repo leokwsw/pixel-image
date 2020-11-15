@@ -68,6 +68,11 @@ class CameraActivity : AppCompatActivity() {
     }
   }
 
+  val cameraView: CameraView
+    get() {
+      return findViewById(R.id.camera_view)
+    }
+
   private var statusBarHeight = 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -147,7 +152,7 @@ class CameraActivity : AppCompatActivity() {
   }
 
   private fun setCamera() {
-    findViewById<CameraView>(R.id.camera_view).apply {
+    cameraView.apply {
       mode = Mode.PICTURE
       audio = Audio.OFF
 
@@ -202,7 +207,7 @@ class CameraActivity : AppCompatActivity() {
   private fun setClickBtn() {
     findViewById<ImageView>(R.id.clickme).setOnLongClickListener(object : View.OnLongClickListener {
       override fun onLongClick(v: View?): Boolean {
-        findViewById<CameraView>(R.id.camera_view).mode = Mode.VIDEO
+        cameraView.mode = Mode.VIDEO
 
         return true
       }
@@ -210,11 +215,11 @@ class CameraActivity : AppCompatActivity() {
 
     findViewById<ImageView>(R.id.clickme).setOnClickListener {
 
-      findViewById<CameraView>(R.id.camera_view).mode = Mode.PICTURE
-      findViewById<CameraView>(R.id.camera_view).takePicture()
+      cameraView.mode = Mode.PICTURE
+      cameraView.takePicture()
 
       ObjectAnimator.ofFloat(
-        findViewById<CameraView>(R.id.camera_view),
+        cameraView,
         "alpha",
         1f,
         0.5f,
@@ -225,6 +230,7 @@ class CameraActivity : AppCompatActivity() {
         duration = 50L
         start()
       }
+      cameraView.takePicture()
     }
   }
 }
