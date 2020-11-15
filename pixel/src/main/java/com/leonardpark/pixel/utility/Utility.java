@@ -320,14 +320,14 @@ public class Utility {
     return false;
   }
 
-  public static void scanPhoto(Context pix, File photo) {
+  public static void scanPhoto(Context pixel, File photo) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
       final Uri contentUri = Uri.fromFile(photo);
       scanIntent.setData(contentUri);
-      pix.sendBroadcast(scanIntent);
+      pixel.sendBroadcast(scanIntent);
     } else {
-      pix.sendBroadcast(
+      pixel.sendBroadcast(
           new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse(photo.getAbsolutePath())));
     }
   }

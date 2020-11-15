@@ -3,8 +3,14 @@ package com.leonardpark.pixel
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -16,14 +22,16 @@ import com.google.android.material.tabs.TabLayout
 import com.leonardpark.pixel.interfaces.WorkFinish
 import com.leonardpark.pixel.utility.PermUtil
 import com.leonardpark.pixel.utility.Utility
-import com.otaliastudios.cameraview.CameraListener
-import com.otaliastudios.cameraview.CameraView
-import com.otaliastudios.cameraview.PictureResult
-import com.otaliastudios.cameraview.VideoResult
+import com.otaliastudios.cameraview.*
 import com.otaliastudios.cameraview.controls.Audio
+import com.otaliastudios.cameraview.controls.Facing
+import com.otaliastudios.cameraview.controls.Flash
 import com.otaliastudios.cameraview.controls.Mode
 import com.otaliastudios.cameraview.size.AspectRatio
 import com.otaliastudios.cameraview.size.SizeSelectors
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 class CameraActivity : AppCompatActivity() {
   companion object {
@@ -69,28 +77,71 @@ class CameraActivity : AppCompatActivity() {
   }
 
   val cameraView: CameraView
-    get() {
-      return findViewById(R.id.camera_view)
-    }
+    get() = findViewById(R.id.camera_view)
+
+  val statusBarBg: View
+    get() = findViewById(R.id.status_bar_bg)
+
+  val tabLayout: TabLayout
+    get() = findViewById(R.id.tab_layout)
+
+  val front: AppCompatImageView
+    get() = findViewById(R.id.front)
+
+  val flash: FrameLayout
+    get() = findViewById(R.id.flash)
+
+  val clickMe: ImageView
+    get() = findViewById(R.id.clickme)
 
   private var statusBarHeight = 0
+
+  private var options: Options = Options.init()
+
+  var flashDrawable = R.drawable.ic_flash_off_black_24dp
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_camera)
 
-    setUpStatusBarAndTabBar()
-
-    setCamera()
-    setFrontBtn()
-    setFlashBtn()
-    setClickBtn()
+    initialize()
   }
 
-  private fun setUpStatusBarAndTabBar() {
+  override fun onRestart() {
+    super.onRestart()
+    cameraView.open()
+    cameraView.mode = Mode.PICTURE
+  }
+
+  override fun onResume() {
+    super.onResume()
+    cameraView.open()
+    cameraView.mode = Mode.PICTURE
+  }
+
+  override fun onPause() {
+    cameraView.close()
+    super.onPause()
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    cameraView.destroy()
+  }
+
+  private fun initialize() {
+    // region get options
+    try {
+      options = intent.getSerializableExtra(OPTIONS) as Options
+    } catch (e: Exception) {
+      e.printStackTrace()
+    }
+    // endregion
+
+    // region status bar
     statusBarHeight = Utility.getStatusBarSizePort(this)
 
-    findViewById<View>(R.id.status_bar_bg).apply {
+    statusBarBg.apply {
       layoutParams.height = statusBarHeight
       translationY = (-1 * statusBarHeight).toFloat()
       requestLayout()
@@ -100,36 +151,17 @@ class CameraActivity : AppCompatActivity() {
     Utility.hideStatusBar(this)
 
     listOf("拍攝與錄影", "相簿").forEach {
-      findViewById<TabLayout>(R.id.tab_layout).addTab(
-        findViewById<TabLayout>(R.id.tab_layout).newTab().apply {
+      tabLayout.addTab(
+        tabLayout.newTab().apply {
           text = it
         }
       )
     }
-  }
+    // endregion status bar
 
-  private fun setFrontBtn() {
-    findViewById<AppCompatImageView>(R.id.front).setOnClickListener {
-      val oa1 = ObjectAnimator.ofFloat(it, "scaleX", 1f, 0f).setDuration(150)
-      val oa2 = ObjectAnimator.ofFloat(it, "scaleX", 0f, 1f).setDuration(150)
-
-      oa1.addListener(object : AnimatorListenerAdapter() {
-        override fun onAnimationEnd(animation: Animator) {
-          super.onAnimationEnd(animation)
-          findViewById<AppCompatImageView>(R.id.front).setImageResource(R.drawable.ic_photo_camera)
-          oa2.start()
-        }
-      })
-
-      oa1.start()
-    }
-  }
-
-  private fun setFlashBtn() {
-    var flashDrawable = R.drawable.ic_flash_off_black_24dp
-
-    val flashIv = findViewById<FrameLayout>(R.id.flash).getChildAt(0) as ImageView
-    findViewById<FrameLayout>(R.id.flash).setOnClickListener {
+    // region Flash
+    val flashIv = flash.getChildAt(0) as ImageView
+    flash.setOnClickListener {
       flashIv.animate()
         .translationY(it.height.toFloat())
         .setDuration(100)
@@ -144,17 +176,49 @@ class CameraActivity : AppCompatActivity() {
                 R.drawable.ic_flash_on_black_24dp
               else -> R.drawable.ic_flash_auto_black_24dp
             }
+            cameraView.flash = when (flashDrawable) {
+              R.drawable.ic_flash_off_black_24dp -> Flash.OFF
+              R.drawable.ic_flash_on_black_24dp -> Flash.ON
+              R.drawable.ic_flash_auto_black_24dp -> Flash.AUTO
+              else -> Flash.AUTO
+            }
             flashIv.setImageResource(flashDrawable)
             flashIv.animate().translationY(0.toFloat()).setDuration(50).setListener(null).start()
           }
         })
     }
-  }
+    // endregion
 
-  private fun setCamera() {
+    // region Front
+    front.setOnClickListener {
+      val oa1 = ObjectAnimator.ofFloat(it, "scaleX", 1f, 0f).setDuration(150)
+      val oa2 = ObjectAnimator.ofFloat(it, "scaleX", 0f, 1f).setDuration(150)
+
+      oa1.addListener(object : AnimatorListenerAdapter() {
+        override fun onAnimationEnd(animation: Animator) {
+          super.onAnimationEnd(animation)
+          front.setImageResource(R.drawable.ic_photo_camera)
+          oa2.start()
+        }
+      })
+
+      oa1.start()
+
+      if (options.isFrontFacing) {
+        options.isFrontFacing = false
+        cameraView.facing = Facing.BACK
+      } else {
+        options.isFrontFacing = true
+        cameraView.facing = Facing.FRONT
+      }
+
+    }
+    // endregion
+
+    // region Camera
     cameraView.apply {
       mode = Mode.PICTURE
-      audio = Audio.OFF
+      if (options.isExcludeVideos) audio = Audio.OFF
 
       val width = SizeSelectors.minWidth(Utility.WIDTH)
       val height = SizeSelectors.minHeight(Utility.HEIGHT)
@@ -180,13 +244,54 @@ class CameraActivity : AppCompatActivity() {
 
       setLifecycleOwner(this@CameraActivity)
 
+      facing = if (options.isFrontFacing) {
+        Facing.FRONT
+      } else {
+        Facing.BACK
+      }
+
       open()
 
       // add Camera Listener
 
       addCameraListener(object : CameraListener() {
         override fun onPictureTaken(result: PictureResult) {
-          super.onPictureTaken(result)
+          val fileName = "IMG_" +
+              SimpleDateFormat("yyyyMMdd_HHmmSS", Locale.ENGLISH).format(Date()) +
+              ".jpg"
+          val filePath = "DCIM/" + options.path
+
+          if (System.isQ) {
+            val resolver = this@CameraActivity.contentResolver
+
+            val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+              ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+                put(MediaStore.MediaColumns.RELATIVE_PATH, filePath)
+              }
+            )
+
+            result.toBitmap {
+              val fos = resolver.openOutputStream(uri!!)
+              if (it != null && fos != null) {
+                it.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                fos.flush()
+                fos.close()
+              }
+            }
+          } else {
+            // TODO: WIP to testing
+            val dir = Environment.getExternalStoragePublicDirectory(filePath)
+            if (!dir.exists()) {
+              dir.mkdirs()
+            }
+
+            result.toFile(File(dir, fileName)) {
+              Utility.vibe(this@CameraActivity, 50)
+              Utility.scanPhoto(this@CameraActivity, it!!)
+            }
+          }
         }
 
         override fun onVideoTaken(result: VideoResult) {
@@ -202,10 +307,14 @@ class CameraActivity : AppCompatActivity() {
         }
       })
     }
+    // endregion
+
+    // init onclick
+    onClickMethods()
   }
 
-  private fun setClickBtn() {
-    findViewById<ImageView>(R.id.clickme).setOnLongClickListener(object : View.OnLongClickListener {
+  private fun onClickMethods() {
+    clickMe.setOnLongClickListener(object : View.OnLongClickListener {
       override fun onLongClick(v: View?): Boolean {
         cameraView.mode = Mode.VIDEO
 
@@ -213,7 +322,7 @@ class CameraActivity : AppCompatActivity() {
       }
     })
 
-    findViewById<ImageView>(R.id.clickme).setOnClickListener {
+    clickMe.setOnClickListener {
 
       cameraView.mode = Mode.PICTURE
       cameraView.takePicture()
@@ -233,4 +342,5 @@ class CameraActivity : AppCompatActivity() {
       cameraView.takePicture()
     }
   }
+
 }

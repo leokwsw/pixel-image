@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         .setSpanCount(4)
         .setVideoDurationLimitInSeconds(30)
         .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)
-        .setPath("pix/akshay"))
+        .setPath("Pixel"))
     }
   }
 
