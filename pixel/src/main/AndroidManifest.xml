@@ -11,7 +11,7 @@
 
   <application>
     <activity
-      android:theme="@style/AppTheme.NoActionBar"
+      android:theme="@style/Theme.Pixel.NoActionBar"
       android:name=".CameraActivity"
       android:noHistory="true"
       android:screenOrientation="portrait" />
