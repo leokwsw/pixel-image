@@ -95,9 +95,6 @@ class CameraActivity : AppCompatActivity() {
   val videoCounterLayoutFl: FrameLayout
     get() = findViewById(R.id.video_counter_layout_fl)
 
-  val videoCounterLayout: LinearLayoutCompat
-    get() = findViewById(R.id.video_counter_layout)
-
   val videoCounterProgressBar: ProgressBar
     get() = findViewById(R.id.video_pbr)
 
@@ -109,7 +106,7 @@ class CameraActivity : AppCompatActivity() {
   private val flash: FrameLayout
     get() = findViewById(R.id.flash)
 
-  val clickMeBg: AppCompatImageView
+  private val clickMeBg: AppCompatImageView
     get() = findViewById(R.id.clickmebg)
 
   private val clickMe: AppCompatImageView
@@ -332,7 +329,6 @@ class CameraActivity : AppCompatActivity() {
             override fun run() {
               ++videoCounterProgress
               videoCounterProgressBar.progress = videoCounterProgress
-              var counter = ""
               var min = 0
               var sec = "$videoCounterProgress"
               if (videoCounterProgress > 59) {
@@ -340,7 +336,7 @@ class CameraActivity : AppCompatActivity() {
                 sec = "${videoCounterProgress - (60 * min)}"
               }
               sec = "0".repeat(2 - sec.length) + sec
-              counter = "${min}:${sec}"
+              var counter = "${min}:${sec}"
               videoCounter.text = counter
               videoCounterHandler.postDelayed(this, 1000)
             }
@@ -380,7 +376,7 @@ class CameraActivity : AppCompatActivity() {
   private fun onClickMethods() {
 
     // TODO: create custom to fix warning
-    clickMe.setOnTouchListener { v, event ->
+    clickMe.setOnTouchListener { _, event ->
       if (event.action == MotionEvent.ACTION_UP) {
         clickMeBg.visibility = View.GONE
         clickMeBg.animate().scaleX(1f).scaleY(1f).setDuration(300)

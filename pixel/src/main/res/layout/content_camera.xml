@@ -38,14 +38,12 @@
       android:id="@+id/video_counter_layout_fl"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:visibility="gone">
+      android:layout_marginTop="41dp">
 
       <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/video_counter_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|top"
-        android:layout_marginTop="41dp"
         android:orientation="horizontal">
 
         <FrameLayout
@@ -145,7 +143,7 @@
         android:layout_marginBottom="5dp"
         android:text="Hold for video, tap for photo"
         android:textColor="#fff"
-        android:textSize="12sp"/>
+        android:textSize="12sp" />
 
     </FrameLayout>
 
