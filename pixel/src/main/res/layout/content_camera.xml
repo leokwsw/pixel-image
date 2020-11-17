@@ -35,27 +35,61 @@
       app:cameraWhiteBalance="auto" />
 
     <FrameLayout
+      android:id="@+id/video_counter_layout_fl"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:visibility="gone">
+
+      <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/video_counter_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="41dp"
+        android:orientation="horizontal">
+
+        <FrameLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical">
+
+          <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="14.5dp"
+            android:layout_height="14.5dp"
+            android:layout_gravity="center"
+            android:padding="1dp"
+            android:src="@drawable/red_circle" />
+
+          <ProgressBar
+            android:id="@+id/video_pbr"
+            style="?android:progressBarStyleHorizontal"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center"
+            android:indeterminate="false"
+            android:progress="0"
+            android:progressDrawable="@drawable/circle_pbr"
+            android:rotation="-90" />
+        </FrameLayout>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+          android:id="@+id/video_counter"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:paddingLeft="9dp"
+          android:text="0:00"
+          android:textColor="@android:color/white"
+          android:textSize="12sp" />
+
+      </androidx.appcompat.widget.LinearLayoutCompat>
+    </FrameLayout>
+
+    <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_above="@+id/tab_layout">
-
-      <ImageView
-        android:id="@+id/clickmebg"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center|bottom"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/red_circle"
-        android:visibility="gone" />
-
-      <ImageView
-        android:id="@+id/clickme"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_gravity="center|bottom"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/ring" />
 
       <FrameLayout
         android:id="@+id/flash"
@@ -67,11 +101,30 @@
         android:background="@drawable/circle"
         android:padding="11dp">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:src="@drawable/ic_flash_off_black_24dp" />
       </FrameLayout>
+
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/clickmebg"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/red_circle"
+        android:visibility="gone" />
+
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/clickme"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/ring" />
+
 
       <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/front"
@@ -84,7 +137,7 @@
         android:padding="11dp"
         android:src="@drawable/ic_photo_camera" />
 
-      <TextView
+      <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/message_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -92,8 +145,7 @@
         android:layout_marginBottom="5dp"
         android:text="Hold for video, tap for photo"
         android:textColor="#fff"
-        android:textSize="12sp"
-        android:visibility="gone" />
+        android:textSize="12sp"/>
 
     </FrameLayout>
 

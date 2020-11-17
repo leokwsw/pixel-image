@@ -6,23 +6,30 @@ import android.animation.ObjectAnimator
 import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.provider.MediaStore
-import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.tabs.TabLayout
 import com.leonardpark.pixel.interfaces.WorkFinish
 import com.leonardpark.pixel.utility.PermUtil
 import com.leonardpark.pixel.utility.Utility
-import com.otaliastudios.cameraview.*
+import com.otaliastudios.cameraview.CameraListener
+import com.otaliastudios.cameraview.CameraView
+import com.otaliastudios.cameraview.PictureResult
+import com.otaliastudios.cameraview.VideoResult
 import com.otaliastudios.cameraview.controls.Audio
 import com.otaliastudios.cameraview.controls.Facing
 import com.otaliastudios.cameraview.controls.Flash
@@ -76,27 +83,60 @@ class CameraActivity : AppCompatActivity() {
     }
   }
 
-  val cameraView: CameraView
-    get() = findViewById(R.id.camera_view)
+  // region UI
 
-  val statusBarBg: View
+  private val statusBarBg: View
     get() = findViewById(R.id.status_bar_bg)
 
-  val tabLayout: TabLayout
-    get() = findViewById(R.id.tab_layout)
+  val camera: CameraView
+    get() = findViewById(R.id.camera_view)
+
+  // region Video Counter
+  val videoCounterLayoutFl: FrameLayout
+    get() = findViewById(R.id.video_counter_layout_fl)
+
+  val videoCounterLayout: LinearLayoutCompat
+    get() = findViewById(R.id.video_counter_layout)
+
+  val videoCounterProgressBar: ProgressBar
+    get() = findViewById(R.id.video_pbr)
+
+  val videoCounter: AppCompatTextView
+    get() = findViewById(R.id.video_counter)
+  // endregion
+
+  // region control
+  private val flash: FrameLayout
+    get() = findViewById(R.id.flash)
+
+  val clickMeBg: AppCompatImageView
+    get() = findViewById(R.id.clickmebg)
+
+  private val clickMe: AppCompatImageView
+    get() = findViewById(R.id.clickme)
 
   val front: AppCompatImageView
     get() = findViewById(R.id.front)
+  // endregion
 
-  val flash: FrameLayout
-    get() = findViewById(R.id.flash)
+  val messageBottom: AppCompatTextView
+    get() = findViewById(R.id.message_bottom)
 
-  val clickMe: ImageView
-    get() = findViewById(R.id.clickme)
+  private val tabLayout: TabLayout
+    get() = findViewById(R.id.tab_layout)
+
+  // endregion
 
   private var statusBarHeight = 0
 
   private var options: Options = Options.init()
+
+  // region video values
+  var videoCounterProgress = 0
+  var maxVideoDuration = 40000
+  var videoCounterHandler: Handler = Handler()
+  var videoCounterRunnable: Runnable = Runnable { }
+  // endregion
 
   var flashDrawable = R.drawable.ic_flash_off_black_24dp
 
@@ -109,24 +149,24 @@ class CameraActivity : AppCompatActivity() {
 
   override fun onRestart() {
     super.onRestart()
-    cameraView.open()
-    cameraView.mode = Mode.PICTURE
+    camera.open()
+    camera.mode = Mode.PICTURE
   }
 
   override fun onResume() {
     super.onResume()
-    cameraView.open()
-    cameraView.mode = Mode.PICTURE
+    camera.open()
+    camera.mode = Mode.PICTURE
   }
 
   override fun onPause() {
-    cameraView.close()
+    camera.close()
     super.onPause()
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    cameraView.destroy()
+    camera.destroy()
   }
 
   private fun initialize() {
@@ -135,6 +175,12 @@ class CameraActivity : AppCompatActivity() {
       options = intent.getSerializableExtra(OPTIONS) as Options
     } catch (e: Exception) {
       e.printStackTrace()
+    }
+    maxVideoDuration = options.videoDurationLimitInSeconds * 1000
+    messageBottom.text = if (options.isExcludeVideos) {
+      "Drag images up for gallery"
+    } else {
+      "Hold for video, tap for photo"
     }
     // endregion
 
@@ -176,7 +222,7 @@ class CameraActivity : AppCompatActivity() {
                 R.drawable.ic_flash_on_black_24dp
               else -> R.drawable.ic_flash_auto_black_24dp
             }
-            cameraView.flash = when (flashDrawable) {
+            camera.flash = when (flashDrawable) {
               R.drawable.ic_flash_off_black_24dp -> Flash.OFF
               R.drawable.ic_flash_on_black_24dp -> Flash.ON
               R.drawable.ic_flash_auto_black_24dp -> Flash.AUTO
@@ -206,17 +252,17 @@ class CameraActivity : AppCompatActivity() {
 
       if (options.isFrontFacing) {
         options.isFrontFacing = false
-        cameraView.facing = Facing.BACK
+        camera.facing = Facing.BACK
       } else {
         options.isFrontFacing = true
-        cameraView.facing = Facing.FRONT
+        camera.facing = Facing.FRONT
       }
 
     }
     // endregion
 
     // region Camera
-    cameraView.apply {
+    camera.apply {
       mode = Mode.PICTURE
       if (options.isExcludeVideos) audio = Audio.OFF
 
@@ -295,15 +341,55 @@ class CameraActivity : AppCompatActivity() {
         }
 
         override fun onVideoTaken(result: VideoResult) {
-          super.onVideoTaken(result)
+          Utility.vibe(this@CameraActivity, 50)
+          Utility.scanPhoto(this@CameraActivity, result.file)
+          camera.mode = Mode.PICTURE
         }
 
         override fun onVideoRecordingStart() {
-          super.onVideoRecordingStart()
+          videoCounterLayoutFl.visibility = View.VISIBLE
+          videoCounterProgress = 0
+          videoCounterProgressBar.progress = 0
+          videoCounterRunnable = object : Runnable {
+            override fun run() {
+              ++videoCounterProgress
+              videoCounterProgressBar.progress = videoCounterProgress
+              var counter = ""
+              var min = 0
+              var sec = "$videoCounterProgress"
+              if (videoCounterProgress > 59) {
+                min = videoCounterProgress / 60
+                sec = "${videoCounterProgress - (60 * min)}"
+              }
+              sec = "0".repeat(2 - sec.length) + sec
+              counter = "${min}:${sec}"
+              videoCounter.text = counter
+              videoCounterHandler.postDelayed(this, 1000)
+            }
+          }
+          videoCounterHandler.postDelayed(videoCounterRunnable, 1000)
+          clickMe.animate().scaleX(1.2f).scaleY(1.2f).setDuration(300).setInterpolator(
+            AccelerateDecelerateInterpolator()
+          ).start()
+          this@CameraActivity.flash.animate().alpha(0f).setDuration(300)
+            .setInterpolator(AccelerateDecelerateInterpolator()).start()
+          messageBottom.animate().alpha(0f).setDuration(300)
+            .setInterpolator(AccelerateDecelerateInterpolator()).start()
+          front.animate().alpha(0f).setDuration(300)
+            .setInterpolator(AccelerateDecelerateInterpolator()).start()
         }
 
         override fun onVideoRecordingEnd() {
-          super.onVideoRecordingEnd()
+          videoCounterLayoutFl.visibility = View.GONE
+          videoCounterHandler.removeCallbacks(videoCounterRunnable)
+          clickMe.animate().scaleX(1f).scaleY(1f).setDuration(300)
+            .setInterpolator(AccelerateDecelerateInterpolator()).start()
+          messageBottom.animate().scaleX(1f).scaleY(1f).setDuration(300)
+            .setInterpolator(AccelerateDecelerateInterpolator()).start()
+          this@CameraActivity.flash.animate().alpha(1f).setDuration(300)
+            .setInterpolator(AccelerateDecelerateInterpolator()).start()
+          front.animate().alpha(1f).setDuration(300)
+            .setInterpolator(AccelerateDecelerateInterpolator()).start()
         }
       })
     }
@@ -314,21 +400,61 @@ class CameraActivity : AppCompatActivity() {
   }
 
   private fun onClickMethods() {
+
+    // TODO: create custom to fix warning
+    clickMe.setOnTouchListener { v, event ->
+      if (event.action == MotionEvent.ACTION_UP) {
+        clickMeBg.visibility = View.GONE
+        clickMeBg.animate().scaleX(1f).scaleY(1f).setDuration(300)
+          .setInterpolator(AccelerateDecelerateInterpolator()).start()
+        clickMe.animate().scaleX(1f).scaleY(1f).setDuration(300)
+          .setInterpolator(AccelerateDecelerateInterpolator()).start()
+
+        if (camera.isTakingVideo) {
+          camera.stopVideo()
+        }
+
+      } else if (event.action == MotionEvent.ACTION_DOWN) {
+        clickMeBg.visibility = View.VISIBLE
+        clickMeBg.animate().scaleX(1.2f).scaleY(1.2f).setDuration(300)
+          .setInterpolator(AccelerateDecelerateInterpolator()).start()
+        clickMe.animate().scaleX(1.2f).scaleY(1.2f).setDuration(300)
+          .setInterpolator(AccelerateDecelerateInterpolator()).start()
+      }
+
+      return@setOnTouchListener false
+    }
+
     clickMe.setOnLongClickListener(object : View.OnLongClickListener {
       override fun onLongClick(v: View?): Boolean {
-        cameraView.mode = Mode.VIDEO
+        if (options.isExcludeVideos) return false
 
+        camera.mode = Mode.VIDEO
+        val fileName = "VID_" +
+            SimpleDateFormat("yyyyMMdd_HHmmSS", Locale.ENGLISH).format(Date()) +
+            ".mp4"
+        val filePath = "DCIM/" + options.path
+
+        val dir = Environment.getExternalStoragePublicDirectory(filePath)
+        if (!dir.exists()) {
+          dir.mkdirs()
+        }
+
+        videoCounterProgressBar.max = maxVideoDuration / 1000
+        videoCounterProgressBar.invalidate()
+
+        camera.takeVideo(File(dir, fileName), maxVideoDuration)
         return true
       }
     })
 
     clickMe.setOnClickListener {
 
-      cameraView.mode = Mode.PICTURE
-      cameraView.takePicture()
+      camera.mode = Mode.PICTURE
+      camera.takePicture()
 
       ObjectAnimator.ofFloat(
-        cameraView,
+        camera,
         "alpha",
         1f,
         0.5f,
@@ -339,7 +465,7 @@ class CameraActivity : AppCompatActivity() {
         duration = 50L
         start()
       }
-      cameraView.takePicture()
+      camera.takePicture()
     }
   }
 
