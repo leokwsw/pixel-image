@@ -307,36 +307,14 @@ class CameraActivity : AppCompatActivity() {
               ".jpg"
           val filePath = "DCIM/" + options.path
 
-          if (System.isQ) {
-            val resolver = this@CameraActivity.contentResolver
+          val dir = Environment.getExternalStoragePublicDirectory(filePath)
+          if (!dir.exists()) {
+            dir.mkdirs()
+          }
 
-            val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-              ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
-                put(MediaStore.MediaColumns.RELATIVE_PATH, filePath)
-              }
-            )
-
-            result.toBitmap {
-              val fos = resolver.openOutputStream(uri!!)
-              if (it != null && fos != null) {
-                it.compress(Bitmap.CompressFormat.JPEG, 100, fos)
-                fos.flush()
-                fos.close()
-              }
-            }
-          } else {
-            // TODO: WIP to testing
-            val dir = Environment.getExternalStoragePublicDirectory(filePath)
-            if (!dir.exists()) {
-              dir.mkdirs()
-            }
-
-            result.toFile(File(dir, fileName)) {
-              Utility.vibe(this@CameraActivity, 50)
-              Utility.scanPhoto(this@CameraActivity, it!!)
-            }
+          result.toFile(File(dir, fileName)) {
+            Utility.vibe(this@CameraActivity, 50)
+            Utility.scanPhoto(this@CameraActivity, it!!)
           }
         }
 
