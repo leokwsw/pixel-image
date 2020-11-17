@@ -399,6 +399,8 @@ class CameraActivity : AppCompatActivity() {
       return@setOnTouchListener false
     }
 
+
+
     clickMe.setOnLongClickListener(object : View.OnLongClickListener {
       override fun onLongClick(v: View?): Boolean {
         if (options.isExcludeVideos) return false
