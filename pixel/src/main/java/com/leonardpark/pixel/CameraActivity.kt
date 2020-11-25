@@ -18,7 +18,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.google.android.material.tabs.TabLayout
 import com.leonardpark.pixel.interfaces.WorkFinish
 import com.leonardpark.pixel.utility.PermUtil
 import com.leonardpark.pixel.utility.Utility
@@ -115,9 +114,6 @@ class CameraActivity : AppCompatActivity() {
   val messageBottom: AppCompatTextView
     get() = findViewById(R.id.message_bottom)
 
-  private val tabLayout: TabLayout
-    get() = findViewById(R.id.tab_layout)
-
   // endregion
 
   private var statusBarHeight = 0
@@ -170,11 +166,11 @@ class CameraActivity : AppCompatActivity() {
       e.printStackTrace()
     }
     maxVideoDuration = options.videoDurationLimitInSeconds * 1000
-    messageBottom.text = if (options.isExcludeVideos) {
-      "Drag images up for gallery"
-    } else {
-      "Hold for video, tap for photo"
-    }
+//    messageBottom.text = if (options.isExcludeVideos) {
+//      "Drag images up for gallery"
+//    } else {
+//      "Hold for video, tap for photo"
+//    }
     // endregion
 
     // region status bar
@@ -189,13 +185,6 @@ class CameraActivity : AppCompatActivity() {
     Utility.setupStatusBarHidden(this)
     Utility.hideStatusBar(this)
 
-    listOf("拍攝與錄影", "相簿").forEach {
-      tabLayout.addTab(
-        tabLayout.newTab().apply {
-          text = it
-        }
-      )
-    }
     // endregion status bar
 
     // region Flash

@@ -4,5 +4,5 @@
   <dimen name="margin_top">0dp</dimen>
   <dimen name="margin_top_nve">0dp</dimen>
 
-  <dimen name = "fastscroll_bubble_size">38dp</dimen>
+  <dimen name="fastscroll_bubble_size">38dp</dimen>
 </resources>

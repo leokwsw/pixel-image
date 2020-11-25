@@ -11,10 +11,15 @@
 
   <application>
     <activity
-      android:theme="@style/Theme.Pixel.NoActionBar"
+      android:name=".PhotoActivity"
+      android:noHistory="true"
+      android:screenOrientation="portrait"
+      android:theme="@style/Theme.Pixel.NoActionBar" />
+    <activity
       android:name=".CameraActivity"
       android:noHistory="true"
-      android:screenOrientation="portrait" />
+      android:screenOrientation="portrait"
+      android:theme="@style/Theme.Pixel.NoActionBar" />
   </application>
 
 </manifest>

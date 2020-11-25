@@ -6,8 +6,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.leonardpark.pixel.CameraActivity
 import com.leonardpark.pixel.Options
+import com.leonardpark.pixel.CameraActivity
 import com.leonardpark.pixel.utility.PermUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.ArrayList
@@ -23,7 +23,13 @@ class MainActivity : AppCompatActivity() {
     setSupportActionBar(toolbar)
 
     fab.setOnClickListener {
-      CameraActivity.start(this, Options.init()
+      startActivity()
+    }
+  }
+
+  private fun startActivity() {
+    CameraActivity.start(
+      this, Options.init()
         .setRequestCode(requestCodePicker)
         .setCount(5)
         .setFrontFacing(false)
@@ -32,8 +38,8 @@ class MainActivity : AppCompatActivity() {
         .setSpanCount(4)
         .setVideoDurationLimitInSeconds(30)
         .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)
-        .setPath("Pixel"))
-    }
+        .setPath("Pixel")
+    )
   }
 
   override fun onRequestPermissionsResult(
@@ -44,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     when (requestCode) {
       PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          CameraActivity.start(this, Options.init())
+          startActivity()
         } else {
           Toast.makeText(this, "Approve permissions to open Image Picker", Toast.LENGTH_LONG).show()
         }

@@ -90,7 +90,7 @@ public class Options implements Serializable {
 
   private void check() {
     if (this == null) {
-      throw new NullPointerException("call init() method to initialise Options2 class");
+      throw new NullPointerException("call init() method to initialise Options class");
     }
   }
 
@@ -106,7 +106,7 @@ public class Options implements Serializable {
 
   public int getRequestCode() {
     if (this.requestCode == 0) {
-      throw new NullPointerException("requestCode in Options2 class is null");
+      throw new NullPointerException("requestCode in Options class is null");
     }
     return requestCode;
   }
