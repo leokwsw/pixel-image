@@ -36,10 +36,11 @@
         <androidx.appcompat.widget.AppCompatImageView
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:src="@drawable/ic_flash_off_black_24dp" />
+          android:src="@drawable/ic_flash_off" />
       </FrameLayout>
 
       <FrameLayout
+        android:id="@+id/time"
         android:layout_width="46dp"
         android:layout_height="46dp"
         android:layout_gravity="center"
@@ -49,10 +50,11 @@
         <androidx.appcompat.widget.AppCompatImageView
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:src="@drawable/ic_flash_off_black_24dp" />
+          android:src="@drawable/ic_time_lapse" />
       </FrameLayout>
 
       <FrameLayout
+        android:id="@+id/filter"
         android:layout_width="46dp"
         android:layout_height="46dp"
         android:layout_gravity="center|end"
@@ -64,7 +66,7 @@
         <androidx.appcompat.widget.AppCompatImageView
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:src="@drawable/ic_flash_off_black_24dp" />
+          android:src="@drawable/ic_photo_filter" />
       </FrameLayout>
 
     </FrameLayout>
@@ -144,6 +146,7 @@
       android:layout_alignParentBottom="true">
 
       <FrameLayout
+        android:id="@+id/photo_library"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="top|start"
@@ -156,11 +159,11 @@
         <androidx.appcompat.widget.AppCompatImageView
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:src="@drawable/ic_flash_off_black_24dp" />
+          android:src="@drawable/ic_photo_library" />
       </FrameLayout>
 
       <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/clickmebg"
+        android:id="@+id/click_me_video_bg"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center|bottom"
@@ -169,7 +172,7 @@
         android:visibility="gone" />
 
       <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/clickmebg2"
+        android:id="@+id/click_me_photo_bg"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center|bottom"
@@ -177,7 +180,7 @@
         android:background="@drawable/white_circle" />
 
       <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/clickme"
+        android:id="@+id/click_me"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_gravity="center|bottom"
@@ -202,11 +205,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="3dp"
         android:text="Hold for video, tap for photo"
         android:textColor="#fff"
-        android:textSize="12sp"
-        android:visibility="gone" />
+        android:textSize="12sp" />
 
     </FrameLayout>
 

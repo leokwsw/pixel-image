@@ -101,11 +101,23 @@ class CameraActivity : AppCompatActivity() {
   private val flash: FrameLayout
     get() = findViewById(R.id.flash)
 
-  private val clickMeBg: AppCompatImageView
-    get() = findViewById(R.id.clickmebg)
+  private val time: FrameLayout
+    get() = findViewById(R.id.time)
+
+  private val filter: FrameLayout
+    get() = findViewById(R.id.filter)
+
+  private val photoLibrary: FrameLayout
+    get() = findViewById(R.id.photo_library)
+
+  private val clickMeVideoBg: AppCompatImageView
+    get() = findViewById(R.id.click_me_video_bg)
+
+  private val clickMePhotoBg: AppCompatImageView
+    get() = findViewById(R.id.click_me_photo_bg)
 
   private val clickMe: AppCompatImageView
-    get() = findViewById(R.id.clickme)
+    get() = findViewById(R.id.click_me)
 
   val front: AppCompatImageView
     get() = findViewById(R.id.front)
@@ -127,7 +139,7 @@ class CameraActivity : AppCompatActivity() {
   var videoCounterRunnable: Runnable = Runnable { }
   // endregion
 
-  var flashDrawable = R.drawable.ic_flash_off_black_24dp
+  var flashDrawable = R.drawable.ic_flash_off
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -166,11 +178,12 @@ class CameraActivity : AppCompatActivity() {
       e.printStackTrace()
     }
     maxVideoDuration = options.videoDurationLimitInSeconds * 1000
-//    messageBottom.text = if (options.isExcludeVideos) {
-//      "Drag images up for gallery"
-//    } else {
-//      "Hold for video, tap for photo"
-//    }
+
+    messageBottom.visibility = if (options.isExcludeVideos) {
+      View.GONE
+    } else {
+      View.VISIBLE
+    }
     // endregion
 
     // region status bar
@@ -198,22 +211,40 @@ class CameraActivity : AppCompatActivity() {
             super.onAnimationEnd(animation)
             flashIv.translationY = -(it.height / 2).toFloat()
             flashDrawable = when (flashDrawable) {
-              R.drawable.ic_flash_auto_black_24dp ->
-                R.drawable.ic_flash_off_black_24dp
-              R.drawable.ic_flash_off_black_24dp ->
-                R.drawable.ic_flash_on_black_24dp
-              else -> R.drawable.ic_flash_auto_black_24dp
+              R.drawable.ic_flash_auto ->
+                R.drawable.ic_flash_off
+              R.drawable.ic_flash_off ->
+                R.drawable.ic_flash_on
+              else -> R.drawable.ic_flash_auto
             }
             camera.flash = when (flashDrawable) {
-              R.drawable.ic_flash_off_black_24dp -> Flash.OFF
-              R.drawable.ic_flash_on_black_24dp -> Flash.ON
-              R.drawable.ic_flash_auto_black_24dp -> Flash.AUTO
+              R.drawable.ic_flash_off -> Flash.OFF
+              R.drawable.ic_flash_on -> Flash.ON
+              R.drawable.ic_flash_auto -> Flash.AUTO
               else -> Flash.AUTO
             }
             flashIv.setImageResource(flashDrawable)
             flashIv.animate().translationY(0.toFloat()).setDuration(50).setListener(null).start()
           }
         })
+    }
+    // endregion
+
+    // region Time
+    time.setOnClickListener {
+
+    }
+    // endregion
+
+    // region filter
+    filter.setOnClickListener {
+
+    }
+    // endregion
+
+    // region photo Library
+    photoLibrary.setOnClickListener {
+
     }
     // endregion
 
@@ -330,25 +361,42 @@ class CameraActivity : AppCompatActivity() {
           clickMe.animate().scaleX(1.2f).scaleY(1.2f).setDuration(300).setInterpolator(
             AccelerateDecelerateInterpolator()
           ).start()
-          this@CameraActivity.flash.animate().alpha(0f).setDuration(300)
-            .setInterpolator(AccelerateDecelerateInterpolator()).start()
-          messageBottom.animate().alpha(0f).setDuration(300)
-            .setInterpolator(AccelerateDecelerateInterpolator()).start()
-          front.animate().alpha(0f).setDuration(300)
-            .setInterpolator(AccelerateDecelerateInterpolator()).start()
+
+          arrayOf(
+            this@CameraActivity.flash,
+            time,
+            this@CameraActivity.filter,
+            photoLibrary,
+            messageBottom,
+            front
+          ).forEach {
+            it.animate().alpha(0f).setDuration(300)
+              .setInterpolator(AccelerateDecelerateInterpolator()).start()
+          }
+
         }
 
         override fun onVideoRecordingEnd() {
           videoCounterLayoutFl.visibility = View.GONE
           videoCounterHandler.removeCallbacks(videoCounterRunnable)
-          clickMe.animate().scaleX(1f).scaleY(1f).setDuration(300)
-            .setInterpolator(AccelerateDecelerateInterpolator()).start()
-          messageBottom.animate().scaleX(1f).scaleY(1f).setDuration(300)
-            .setInterpolator(AccelerateDecelerateInterpolator()).start()
-          this@CameraActivity.flash.animate().alpha(1f).setDuration(300)
-            .setInterpolator(AccelerateDecelerateInterpolator()).start()
-          front.animate().alpha(1f).setDuration(300)
-            .setInterpolator(AccelerateDecelerateInterpolator()).start()
+
+          arrayOf(clickMe, messageBottom).forEach {
+            it.animate().scaleX(1f).scaleY(1f).setDuration(300)
+              .setInterpolator(AccelerateDecelerateInterpolator()).start()
+          }
+
+          arrayOf(
+            this@CameraActivity.flash,
+            time,
+            this@CameraActivity.filter,
+            photoLibrary,
+            messageBottom,
+            front
+          ).forEach {
+            it.animate().alpha(1f).setDuration(300)
+              .setInterpolator(AccelerateDecelerateInterpolator()).start()
+          }
+
         }
       })
     }
@@ -363,8 +411,9 @@ class CameraActivity : AppCompatActivity() {
     // TODO: create custom to fix warning
     clickMe.setOnTouchListener { _, event ->
       if (event.action == MotionEvent.ACTION_UP) {
-        clickMeBg.visibility = View.GONE
-        clickMeBg.animate().scaleX(1f).scaleY(1f).setDuration(300)
+        clickMeVideoBg.visibility = View.GONE
+        clickMePhotoBg.visibility = View.VISIBLE
+        clickMeVideoBg.animate().scaleX(1f).scaleY(1f).setDuration(300)
           .setInterpolator(AccelerateDecelerateInterpolator()).start()
         clickMe.animate().scaleX(1f).scaleY(1f).setDuration(300)
           .setInterpolator(AccelerateDecelerateInterpolator()).start()
@@ -374,8 +423,9 @@ class CameraActivity : AppCompatActivity() {
         }
 
       } else if (event.action == MotionEvent.ACTION_DOWN) {
-        clickMeBg.visibility = View.VISIBLE
-        clickMeBg.animate().scaleX(1.2f).scaleY(1.2f).setDuration(300)
+        clickMeVideoBg.visibility = View.VISIBLE
+        clickMePhotoBg.visibility = View.GONE
+        clickMeVideoBg.animate().scaleX(1.2f).scaleY(1.2f).setDuration(300)
           .setInterpolator(AccelerateDecelerateInterpolator()).start()
         clickMe.animate().scaleX(1.2f).scaleY(1.2f).setDuration(300)
           .setInterpolator(AccelerateDecelerateInterpolator()).start()
