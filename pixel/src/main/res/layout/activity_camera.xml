@@ -1,11 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<FrameLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:background="#000"
   tools:context=".CameraActivity">
 
-  <include layout="@layout/content_camera" />
+  <View
+    android:id="@+id/status_bar_bg"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/margin_top"
+    android:translationY="@dimen/margin_top_nve" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="?actionBarSize">
+
+      <FrameLayout
+        android:id="@+id/flash"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_gravity="center|start"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:background="@drawable/circle"
+        android:padding="11dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:src="@drawable/ic_flash_off" />
+      </FrameLayout>
+
+    </FrameLayout>
+
+    <com.otaliastudios.cameraview.CameraView
+      android:id="@+id/camera_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="center"
+      android:layout_marginTop="?actionBarSize"
+      android:layout_marginBottom="110dp"
+      android:keepScreenOn="true"
+      app:cameraFacing="back"
+      app:cameraFlash="off"
+      app:cameraGestureLongTap="autoFocus"
+      app:cameraGesturePinch="zoom"
+      app:cameraGestureTap="autoFocus"
+      app:cameraPictureFormat="jpeg"
+      app:cameraVideoCodec="deviceDefault"
+      app:cameraWhiteBalance="auto" />
+
+    <FrameLayout
+      android:id="@+id/video_counter_layout_fl"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="41dp"
+      android:visibility="gone">
+
+      <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:orientation="horizontal">
+
+        <FrameLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical">
+
+          <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="14.5dp"
+            android:layout_height="14.5dp"
+            android:layout_gravity="center"
+            android:padding="1dp"
+            android:src="@drawable/red_circle" />
+
+          <ProgressBar
+            android:id="@+id/video_pbr"
+            style="?android:progressBarStyleHorizontal"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center"
+            android:indeterminate="false"
+            android:progress="0"
+            android:progressDrawable="@drawable/circle_pbr"
+            android:rotation="-90" />
+        </FrameLayout>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+          android:id="@+id/video_counter"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:layout_marginStart="9dp"
+          android:layout_marginLeft="9dp"
+          android:text="0:00"
+          android:textColor="@android:color/white"
+          android:textSize="12sp" />
+
+      </androidx.appcompat.widget.LinearLayoutCompat>
+    </FrameLayout>
+
+    <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true">
+
+      <FrameLayout
+        android:id="@+id/photo_library"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="27dp"
+        android:background="@drawable/circle"
+        android:padding="11dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:src="@drawable/ic_photo_library" />
+      </FrameLayout>
+
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/click_me_video_bg"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/red_circle"
+        android:visibility="gone" />
+
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/click_me_photo_bg"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/white_circle" />
+
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/click_me"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/ring" />
+
+      <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/front"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="27dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/circle"
+        android:padding="11dp"
+        android:src="@drawable/ic_photo_camera" />
+
+      <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/message_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="3dp"
+        android:text="Hold for video, tap for photo"
+        android:textColor="#fff"
+        android:textSize="12sp" />
+
+    </FrameLayout>
+
+  </RelativeLayout>
+
+
+</FrameLayout>

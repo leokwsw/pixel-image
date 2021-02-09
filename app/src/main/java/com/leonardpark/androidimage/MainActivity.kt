@@ -1,11 +1,15 @@
 package com.leonardpark.androidimage
 
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.leonardpark.pixel.Options
 import com.leonardpark.pixel.CameraActivity
 import com.leonardpark.pixel.utility.PermUtil
@@ -15,6 +19,8 @@ import java.util.ArrayList
 class MainActivity : AppCompatActivity() {
 
   private val requestCodePicker = 100
+  private lateinit var adapter: Adapter
+  private lateinit var options: Options
   private var returnValue = ArrayList<String>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,24 +28,29 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
     setSupportActionBar(toolbar)
 
+    options = Options.init()
+      .setRequestCode(requestCodePicker)
+      .setCount(5)
+      .setFrontFacing(false)
+      .setPreSelectedUrls(returnValue)
+      .setExcludeVideos(false)
+      .setSpanCount(4)
+      .setVideoDurationLimitInSeconds(30)
+      .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)
+      .setPath("Pixel")
+
+    recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+    adapter = Adapter(this)
+    recyclerView.adapter = adapter
+
     fab.setOnClickListener {
+      options.preSelectedUrls = returnValue
       startActivity()
     }
   }
 
   private fun startActivity() {
-    CameraActivity.start(
-      this, Options.init()
-        .setRequestCode(requestCodePicker)
-        .setCount(5)
-        .setFrontFacing(false)
-        .setPreSelectedUrls(returnValue)
-        .setExcludeVideos(false)
-        .setSpanCount(4)
-        .setVideoDurationLimitInSeconds(30)
-        .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)
-        .setPath("Pixel")
-    )
+    CameraActivity.start(this, options)
   }
 
   override fun onRequestPermissionsResult(
@@ -53,6 +64,18 @@ class MainActivity : AppCompatActivity() {
           startActivity()
         } else {
           Toast.makeText(this, "Approve permissions to open Image Picker", Toast.LENGTH_LONG).show()
+        }
+      }
+    }
+  }
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+    when (requestCode) {
+      requestCodePicker -> {
+        if (resultCode == Activity.RESULT_OK) {
+          returnValue = data?.getStringArrayListExtra(CameraActivity.IMAGE_RESULTS)!!
+          adapter.addImage(returnValue)
         }
       }
     }
