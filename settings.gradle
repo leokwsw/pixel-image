@@ -1,3 +1,2 @@
 include ':pixel'
 include ':app'
-rootProject.name = "Android Image"
