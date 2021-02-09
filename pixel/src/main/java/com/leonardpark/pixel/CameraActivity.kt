@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -276,8 +275,11 @@ class CameraActivity : AppCompatActivity() {
 
         override fun onVideoTaken(result: VideoResult) {
           Utility.vibe(this@CameraActivity, 50)
+          val img = Img("", "", result.file.absolutePath, "", 3)
+          selectionList.add(img)
           Utility.scanPhoto(this@CameraActivity, result.file)
           camera_view.mode = Mode.PICTURE
+          returnObjects()
         }
 
         override fun onVideoRecordingStart() {
