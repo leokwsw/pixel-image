@@ -1,17 +1,16 @@
-package com.leonardpark.androidimage
+package com.leonardpark.pixel.sample
 
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.leonardpark.pixel.Options
 import com.leonardpark.pixel.CameraActivity
+import com.leonardpark.pixel.Options
 import com.leonardpark.pixel.utility.PermUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.ArrayList

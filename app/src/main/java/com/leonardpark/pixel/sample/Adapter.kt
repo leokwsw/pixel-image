@@ -1,4 +1,4 @@
-package com.leonardpark.androidimage
+package com.leonardpark.pixel.sample
 
 import android.content.Context
 import android.content.Intent
@@ -11,7 +11,6 @@ import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.image.view.*
