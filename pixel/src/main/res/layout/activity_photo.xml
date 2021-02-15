@@ -35,4 +35,14 @@
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 
+  <com.google.android.material.floatingactionbutton.FloatingActionButton
+    android:id="@+id/fab_add"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|end"
+    android:layout_margin="16dp"
+    android:contentDescription="Open Pixel Gallery"
+    app:srcCompat="@drawable/ic_add"
+    tools:ignore="VectorDrawableCompat" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

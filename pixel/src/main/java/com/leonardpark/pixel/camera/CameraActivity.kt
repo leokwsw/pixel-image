@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -268,6 +269,7 @@ class CameraActivity : AppCompatActivity() {
             Utility.vibe(this@CameraActivity, 50)
             Utility.scanPhoto(this@CameraActivity, it!!)
             val img = Img("", "", it.absolutePath, "", 1)
+            Log.d("testmo", "absolutePath : ${it.absolutePath}")
             selectionList.add(img)
             returnObjects()
           }

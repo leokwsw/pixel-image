@@ -88,7 +88,14 @@ class GalleryActivity : AppCompatActivity() {
         MediaStore.Images.Media._ID,
         MediaStore.Images.Media.DATA,
         MediaStore.Images.Media.DATE_ADDED,
-        MediaStore.Images.Media.TITLE
+        MediaStore.Files.FileColumns.DATE_ADDED,
+        MediaStore.Files.FileColumns.DATA,
+        MediaStore.Files.FileColumns.MEDIA_TYPE,
+        MediaStore.Files.FileColumns._ID,
+        MediaStore.Files.FileColumns.DISPLAY_NAME,
+        MediaStore.Files.FileColumns.TITLE,
+        MediaStore.Files.FileColumns.PARENT,
+        MediaStore.Images.Media.DATE_MODIFIED
       ),
       null,
       null,
@@ -101,16 +108,12 @@ class GalleryActivity : AppCompatActivity() {
           val idColumn = imagesCursor.getColumnIndex(MediaStore.Images.Media._ID)
           val dataColumn = imagesCursor.getColumnIndex(MediaStore.Images.Media.DATA)
           val dateAddedColumn = imagesCursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED)
-          // val titleColumn = imagesCursor.getColumnIndex(MediaStore.Images.Media.TITLE)
-
           do {
             val id = imagesCursor.getString(idColumn)
             val data = imagesCursor.getString(dataColumn)
             val dateAdded = imagesCursor.getString(dateAddedColumn)
-            // val title = imagesCursor.getString(titleColumn)
-            val galleryData =
-              GalleryData()
 
+            val galleryData = GalleryData()
             galleryData.albumName = File(data).parentFile!!.name
             galleryData.photoUri = data
             galleryData.id = Integer.valueOf(id)
@@ -149,9 +152,6 @@ class GalleryActivity : AppCompatActivity() {
       Log.e("testmo", e.toString())
     } finally {
       photoList.sortWith(compareByDescending { File(it.photoUri).lastModified() })
-
-      Log.d("testmo", "size : ${photoList.size}")
-
       recyclerView.apply {
         layoutManager = GridLayoutManager(context, 4)
         adapter = GalleryAdapter(
@@ -159,12 +159,26 @@ class GalleryActivity : AppCompatActivity() {
           photoList,
           object : GalleryInterface {
             override fun onItemClickListener(add: Boolean, uri: String) {
-
+              val img = Img("", "", uri, "", 1)
+              if (add){
+                selectionList.add(img)
+              } else {
+                selectionList.remove(img)
+              }
             }
           },
           options.count
         )
       }
+    }
+
+    fab_add.setOnClickListener {
+      val list = ArrayList<String>()
+      for (i in selectionList) list.add(i.url)
+      val resultIntent = Intent()
+      resultIntent.putStringArrayListExtra(IMAGE_RESULTS, list)
+      setResult(RESULT_OK, resultIntent)
+      finish()
     }
   }
 }

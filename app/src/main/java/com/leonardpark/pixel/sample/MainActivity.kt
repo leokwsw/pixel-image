@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -90,6 +91,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
+
     when (requestCode) {
       cameraRequestCodePicker -> {
         if (resultCode == Activity.RESULT_OK) {
@@ -99,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         }
       }
       galleryRequestCodePicker -> {
-        if (requestCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
           val returnImage = data?.getStringArrayListExtra(GalleryActivity.IMAGE_RESULTS)!!
           returnValue.addAll(returnImage)
           adapter.addImage(returnValue)

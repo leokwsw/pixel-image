@@ -29,7 +29,6 @@ class GalleryAdapter(
   private val copyImageList: ArrayList<GalleryData> = ArrayList()
 
   init {
-    Log.d("testmo", "mo : ${fullImageList.size}")
     copyImageList.addAll(fullImageList)
   }
 
@@ -55,35 +54,34 @@ class GalleryAdapter(
     }
 
     //
-//    val requestListener: RequestListener<Drawable> = object : RequestListener<Drawable> {
-//      override fun onLoadFailed(
-//        e: GlideException?,
-//        model: Any?,
-//        target: Target<Drawable>?,
-//        isFirstResource: Boolean
-//      ): Boolean {
-//        holder.itemView.iv_image.alpha = 0.3f
-//        holder.itemView.iv_image.isEnabled = false
-//        holder.itemView.check_box.visibility = View.INVISIBLE
-//        return false
-//      }
-//
-//      override fun onResourceReady(
-//        resource: Drawable?,
-//        model: Any?,
-//        target: Target<Drawable>?,
-//        dataSource: DataSource?,
-//        isFirstResource: Boolean
-//      ): Boolean {
-//        return false
-//      }
-//
-//    }
-//
+    val requestListener: RequestListener<Drawable> = object : RequestListener<Drawable> {
+      override fun onLoadFailed(
+        e: GlideException?,
+        model: Any?,
+        target: Target<Drawable>?,
+        isFirstResource: Boolean
+      ): Boolean {
+        holder.itemView.iv_image.alpha = 0.3f
+        holder.itemView.iv_image.isEnabled = false
+        holder.itemView.iv_image.isClickable = false
+        holder.itemView.check_box.visibility = View.INVISIBLE
+        return false
+      }
+
+      override fun onResourceReady(
+        resource: Drawable?,
+        model: Any?,
+        target: Target<Drawable>?,
+        dataSource: DataSource?,
+        isFirstResource: Boolean
+      ): Boolean = false
+
+    }
+
     Glide.with(context)
       .load(Uri.fromFile(File(copyImageList[position].photoUri)))
       .apply(RequestOptions.centerCropTransform().override(100))
-//      .transition(DrawableTransitionOptions.withCrossFade()).listener(requestListener)
+      .transition(DrawableTransitionOptions.withCrossFade()).listener(requestListener)
       .into(holder.itemView.iv_image)
     //
 
@@ -106,50 +104,52 @@ class GalleryAdapter(
     )
 
     holder.itemView.iv_image.setOnClickListener {
-      if (maxSelected != 0) {
-        when {
-          getSelectedCount() <= maxSelected -> {
-            if (copyImageList[position].isSelected) {
-              copyImageList[position].isSelected = false
-              listener.onItemClickListener(false, copyImageList[position].photoUri)
-              holder.itemView.check_box.setImageResource(R.drawable.ic_new_empty)
-              if (getSelectedCount() == (maxSelected - 1) && !copyImageList[position].isSelected) {
-                copyImageList.forEach { it.isEnabled = true }
-                for ((index, item) in copyImageList.withIndex()) {
-                  if (item.isEnabled && !item.isSelected) notifyItemChanged(index)
+      if(it.isClickable){
+        if (maxSelected != 0) {
+          when {
+            getSelectedCount() <= maxSelected -> {
+              if (copyImageList[position].isSelected) {
+                copyImageList[position].isSelected = false
+                listener.onItemClickListener(false, copyImageList[position].photoUri)
+                holder.itemView.check_box.setImageResource(R.drawable.ic_new_empty)
+                if (getSelectedCount() == (maxSelected - 1) && !copyImageList[position].isSelected) {
+                  copyImageList.forEach { it.isEnabled = true }
+                  for ((index, item) in copyImageList.withIndex()) {
+                    if (item.isEnabled && !item.isSelected) notifyItemChanged(index)
+                  }
                 }
-              }
-            } else {
-              copyImageList[position].isSelected = true
-              listener.onItemClickListener(true, copyImageList[position].photoUri)
-              holder.itemView.check_box.setImageResource(R.drawable.ic_new_tick)
-              if (getSelectedCount() == maxSelected && copyImageList[position].isSelected) {
-                copyImageList.filterNot { it.isSelected }.forEach { it.isEnabled = false }
-                for ((index, item) in copyImageList.withIndex()) {
-                  if (!item.isEnabled) notifyItemChanged(index)
+              } else {
+                copyImageList[position].isSelected = true
+                listener.onItemClickListener(true, copyImageList[position].photoUri)
+                holder.itemView.check_box.setImageResource(R.drawable.ic_new_tick)
+                if (getSelectedCount() == maxSelected && copyImageList[position].isSelected) {
+                  copyImageList.filterNot { it.isSelected }.forEach { it.isEnabled = false }
+                  for ((index, item) in copyImageList.withIndex()) {
+                    if (!item.isEnabled) notifyItemChanged(index)
+                  }
                 }
               }
             }
-          }
-          getSelectedCount() > maxSelected -> {
-            for (image in copyImageList) {
-              copyImageList.filter { it.isSelected && !it.isEnabled }
-                .forEach { it.isSelected = false }
+            getSelectedCount() > maxSelected -> {
+              for (image in copyImageList) {
+                copyImageList.filter { it.isSelected && !it.isEnabled }
+                  .forEach { it.isSelected = false }
+              }
+            }
+            else -> {
+              Log.d("testmo", "getSelectedCount : ${getSelectedCount()} ; maxSelected : $maxSelected")
             }
           }
-          else -> {
-            Log.d("testmo", "getSelectedCount : ${getSelectedCount()} ; maxSelected : $maxSelected")
-          }
-        }
-      } else {
-        if (copyImageList[position].isSelected) {
-          copyImageList[position].isSelected = false
-          holder.itemView.check_box.setImageResource(R.drawable.ic_new_empty)
-          notifyItemChanged(position)
         } else {
-          copyImageList[position].isSelected = true
-          holder.itemView.check_box.setImageResource(R.drawable.ic_new_tick)
-          notifyItemChanged(position)
+          if (copyImageList[position].isSelected) {
+            copyImageList[position].isSelected = false
+            holder.itemView.check_box.setImageResource(R.drawable.ic_new_empty)
+            notifyItemChanged(position)
+          } else {
+            copyImageList[position].isSelected = true
+            holder.itemView.check_box.setImageResource(R.drawable.ic_new_tick)
+            notifyItemChanged(position)
+          }
         }
       }
     }
