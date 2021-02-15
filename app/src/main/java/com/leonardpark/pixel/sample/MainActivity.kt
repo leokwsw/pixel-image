@@ -9,17 +9,23 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.leonardpark.pixel.CameraActivity
-import com.leonardpark.pixel.Options
+import com.leonardpark.pixel.camera.CameraActivity
+import com.leonardpark.pixel.camera.CameraOptions
+import com.leonardpark.pixel.gallery.GalleryActivity
+import com.leonardpark.pixel.gallery.GalleryOptions
 import com.leonardpark.pixel.utility.PermUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
-  private val requestCodePicker = 100
+  private val cameraRequestCodePicker = 100
+  private val galleryRequestCodePicker = 200
+
+  private lateinit var cameraOptions: CameraOptions
+  private lateinit var galleryOptions: GalleryOptions
+
   private lateinit var adapter: Adapter
-  private lateinit var options: Options
   private var returnValue = ArrayList<String>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,29 +33,36 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
     setSupportActionBar(toolbar)
 
-    options = Options.init()
-      .setRequestCode(requestCodePicker)
+    recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+    adapter = Adapter(this)
+    recyclerView.adapter = adapter
+
+    cameraOptions = CameraOptions.init()
+      .setRequestCode(cameraRequestCodePicker)
       .setCount(5)
       .setFrontFacing(false)
       .setPreSelectedUrls(returnValue)
       .setExcludeVideos(false)
       .setSpanCount(4)
       .setVideoDurationLimitInSeconds(30)
-      .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)
+      .setScreenOrientation(CameraOptions.SCREEN_ORIENTATION_PORTRAIT)
       .setPath("Pixel")
 
-    recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-    adapter = Adapter(this)
-    recyclerView.adapter = adapter
-
-    fab.setOnClickListener {
-      options.preSelectedUrls = returnValue
-      startActivity()
+    fab_camera.setOnClickListener {
+      cameraOptions.preSelectedUrls = returnValue
+      CameraActivity.start(this, cameraOptions)
     }
-  }
 
-  private fun startActivity() {
-    CameraActivity.start(this, options)
+    galleryOptions = GalleryOptions.init()
+      .setRequestCode(galleryRequestCodePicker)
+      .setCount(5)
+      .setPreSelectedUrls(returnValue)
+      .setSpanCount(4)
+
+    fab_gallery.setOnClickListener {
+      galleryOptions.preSelectedUrls = returnValue
+      GalleryActivity.start(this, galleryOptions)
+    }
   }
 
   override fun onRequestPermissionsResult(
@@ -58,11 +71,18 @@ class MainActivity : AppCompatActivity() {
     grantResults: IntArray
   ) {
     when (requestCode) {
-      PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
+      PermUtil.CAMERA_REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          startActivity()
+          CameraActivity.start(this, cameraOptions)
         } else {
-          Toast.makeText(this, "Approve permissions to open Image Picker", Toast.LENGTH_LONG).show()
+          Toast.makeText(this, "Approve permissions to open Camera", Toast.LENGTH_LONG).show()
+        }
+      }
+      PermUtil.GALLERY_REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          GalleryActivity.start(this, galleryOptions)
+        } else {
+          Toast.makeText(this, "Approve permissions to open Gallery", Toast.LENGTH_LONG).show()
         }
       }
     }
@@ -71,9 +91,17 @@ class MainActivity : AppCompatActivity() {
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     when (requestCode) {
-      requestCodePicker -> {
+      cameraRequestCodePicker -> {
         if (resultCode == Activity.RESULT_OK) {
-          returnValue = data?.getStringArrayListExtra(CameraActivity.IMAGE_RESULTS)!!
+          val returnImage = data?.getStringArrayListExtra(CameraActivity.IMAGE_RESULTS)!!
+          returnValue.addAll(returnImage)
+          adapter.addImage(returnValue)
+        }
+      }
+      galleryRequestCodePicker -> {
+        if (requestCode == Activity.RESULT_OK) {
+          val returnImage = data?.getStringArrayListExtra(GalleryActivity.IMAGE_RESULTS)!!
+          returnValue.addAll(returnImage)
           adapter.addImage(returnValue)
         }
       }

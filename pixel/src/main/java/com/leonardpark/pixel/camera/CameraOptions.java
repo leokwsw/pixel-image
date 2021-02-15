@@ -1,11 +1,11 @@
-package com.leonardpark.pixel;
+package com.leonardpark.pixel.camera;
 
 import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
-public class Options implements Serializable {
+public class CameraOptions implements Serializable {
   private int count = 1;
   private int requestCode = 0;
   private int spanCount = 4;
@@ -36,18 +36,18 @@ public class Options implements Serializable {
   @ScreenOrientation
   private int screenOrientation = SCREEN_ORIENTATION_UNSPECIFIED;
 
-  private Options() {
+  private CameraOptions() {
   }
 
-  public static Options init() {
-    return new Options();
+  public static CameraOptions init() {
+    return new CameraOptions();
   }
 
   public int getVideoDurationLimitInSeconds() {
     return videoDurationLimitInSeconds;
   }
 
-  public Options setVideoDurationLimitInSeconds(int videoDurationLimitInSececonds) {
+  public CameraOptions setVideoDurationLimitInSeconds(int videoDurationLimitInSececonds) {
     this.videoDurationLimitInSeconds = videoDurationLimitInSececonds;
     return this;
   }
@@ -56,7 +56,7 @@ public class Options implements Serializable {
     return preSelectedUrls;
   }
 
-  public Options setPreSelectedUrls(ArrayList<String> preSelectedUrls) {
+  public CameraOptions setPreSelectedUrls(ArrayList<String> preSelectedUrls) {
     check();
     this.preSelectedUrls = preSelectedUrls;
     return this;
@@ -66,7 +66,7 @@ public class Options implements Serializable {
     return excludeVideos;
   }
 
-  public Options setExcludeVideos(boolean excludeVideos) {
+  public CameraOptions setExcludeVideos(boolean excludeVideos) {
     this.excludeVideos = excludeVideos;
     return this;
   }
@@ -83,7 +83,7 @@ public class Options implements Serializable {
     return this.frontFacing;
   }
 
-  public Options setFrontFacing(boolean frontFacing) {
+  public CameraOptions setFrontFacing(boolean frontFacing) {
     this.frontFacing = frontFacing;
     return this;
   }
@@ -98,7 +98,7 @@ public class Options implements Serializable {
     return count;
   }
 
-  public Options setCount(int count) {
+  public CameraOptions setCount(int count) {
     check();
     this.count = count;
     return this;
@@ -111,7 +111,7 @@ public class Options implements Serializable {
     return requestCode;
   }
 
-  public Options setRequestCode(int requestCode) {
+  public CameraOptions setRequestCode(int requestCode) {
     check();
     this.requestCode = requestCode;
     return this;
@@ -121,7 +121,7 @@ public class Options implements Serializable {
     return this.path;
   }
 
-  public Options setPath(String path) {
+  public CameraOptions setPath(String path) {
     check();
     this.path = path;
     return this;
@@ -131,7 +131,7 @@ public class Options implements Serializable {
     return screenOrientation;
   }
 
-  public Options setScreenOrientation(@ScreenOrientation int screenOrientation) {
+  public CameraOptions setScreenOrientation(@ScreenOrientation int screenOrientation) {
     check();
     this.screenOrientation = screenOrientation;
     return this;
@@ -145,7 +145,7 @@ public class Options implements Serializable {
     return spanCount;
   }
 
-  public Options setSpanCount(int spanCount) {
+  public CameraOptions setSpanCount(int spanCount) {
     check();
     this.spanCount = spanCount;
     if (spanCount < 1 && spanCount > 5) {

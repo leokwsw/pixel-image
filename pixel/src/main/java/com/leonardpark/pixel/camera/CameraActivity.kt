@@ -1,4 +1,4 @@
-package com.leonardpark.pixel
+package com.leonardpark.pixel.camera
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -15,6 +15,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.leonardpark.pixel.R
 import com.leonardpark.pixel.interfaces.WorkFinish
 import com.leonardpark.pixel.modals.Img
 import com.leonardpark.pixel.utility.PermUtil
@@ -38,8 +39,7 @@ class CameraActivity : AppCompatActivity() {
 
     var IMAGE_RESULTS = "image_results"
 
-
-    fun start(context: Fragment, options: Options) {
+    fun start(context: Fragment, options: CameraOptions) {
       PermUtil.checkForCameraWritePermissions(context, object : WorkFinish {
         override fun onWorkFinish(check: Boolean) {
           context.startActivityForResult(
@@ -55,10 +55,10 @@ class CameraActivity : AppCompatActivity() {
     }
 
     fun start(context: Fragment, requestCode: Int) {
-      start(context, Options.init().setRequestCode(requestCode).setCount(1))
+      start(context, CameraOptions.init().setRequestCode(requestCode).setCount(1))
     }
 
-    fun start(context: FragmentActivity, options: Options) {
+    fun start(context: FragmentActivity, options: CameraOptions) {
       PermUtil.checkForCameraWritePermissions(context, object : WorkFinish {
         override fun onWorkFinish(check: Boolean) {
           context.startActivityForResult(
@@ -78,7 +78,7 @@ class CameraActivity : AppCompatActivity() {
 
   private var statusBarHeight = 0
 
-  private var options: Options = Options.init()
+  private var options: CameraOptions = CameraOptions.init()
 
   private var selectionList: ArrayList<Img> = ArrayList()
 
@@ -124,7 +124,7 @@ class CameraActivity : AppCompatActivity() {
   private fun initialize() {
     // region get options
     try {
-      options = intent.getSerializableExtra(OPTIONS) as Options
+      options = intent.getSerializableExtra(OPTIONS) as CameraOptions
     } catch (e: Exception) {
       e.printStackTrace()
     }

@@ -11,15 +11,25 @@
 
   <application>
     <activity
-      android:name=".PhotoActivity"
+      android:name=".gallery.GalleryActivity"
       android:noHistory="true"
       android:screenOrientation="portrait"
       android:theme="@style/Theme.Pixel.NoActionBar" />
     <activity
-      android:name=".CameraActivity"
+      android:name=".camera.CameraActivity"
       android:noHistory="true"
       android:screenOrientation="portrait"
       android:theme="@style/Theme.Pixel.NoActionBar" />
+
+    <provider
+      android:name="androidx.core.content.FileProvider"
+      android:authorities="com.leonardpark.pixel.provider"
+      android:exported="false"
+      android:grantUriPermissions="true">
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/provider_paths" />
+    </provider>
   </application>
 
 </manifest>
