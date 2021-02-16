@@ -30,7 +30,9 @@
       android:id="@+id/recyclerView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_margin="5dp" />
+      android:layout_margin="5dp"
+      app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+      app:spanCount="2" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -49,7 +51,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom|end"
-    android:layout_margin="73dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginBottom="88dp"
     android:contentDescription="Open Pixel Gallery"
     app:srcCompat="@drawable/ic_galery"
     tools:ignore="VectorDrawableCompat" />
@@ -59,8 +63,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom|end"
-    android:layout_marginEnd="128dp"
-    android:layout_marginRight="128dp"
+    android:layout_marginEnd="88dp"
+    android:layout_marginRight="88dp"
     android:layout_marginBottom="16dp"
     android:contentDescription="Open Pixel Draw"
     app:srcCompat="@drawable/ic_draw"

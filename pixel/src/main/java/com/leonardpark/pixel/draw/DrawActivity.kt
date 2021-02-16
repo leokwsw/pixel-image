@@ -182,83 +182,43 @@ class DrawActivity : AppCompatActivity() {
   }
 
   private fun colorSelector() {
-    image_color_black.setOnClickListener {
-      val color = ResourcesCompat.getColor(resources, R.color.color_black, null)
-      draw_view.setColor(color)
-      circle_view_opacity.setColor(color)
-      circle_view_width.setColor(color)
-      scaleColorView(image_color_black)
+    val imgs = arrayListOf(
+      image_color_black,
+      image_color_red,
+      image_color_yellow,
+      image_color_green,
+      image_color_blue,
+      image_color_pink,
+      image_color_brown
+    )
+
+    val cols = arrayListOf(
+      R.color.color_black,
+      R.color.color_red,
+      R.color.color_yellow,
+      R.color.color_green,
+      R.color.color_blue,
+      R.color.color_pink,
+      R.color.color_brown
+    )
+
+    imgs.forEachIndexed { index, img ->
+      img.setOnClickListener {
+        val color = ResourcesCompat.getColor(resources, cols[index], null)
+        draw_view.setColor(color)
+        circle_view_opacity.setColor(color)
+        circle_view_width.setColor(color)
+
+        imgs.forEach {
+          it.scaleX = 1f
+          it.scaleY = 1f
+        }
+
+        img.scaleX = 1.5f
+        img.scaleY = 1.5f
+
+      }
     }
-    image_color_red.setOnClickListener {
-      val color = ResourcesCompat.getColor(resources, R.color.color_red, null)
-      draw_view.setColor(color)
-      circle_view_opacity.setColor(color)
-      circle_view_width.setColor(color)
-      scaleColorView(image_color_red)
-    }
-    image_color_yellow.setOnClickListener {
-      val color = ResourcesCompat.getColor(resources, R.color.color_yellow, null)
-      draw_view.setColor(color)
-      circle_view_opacity.setColor(color)
-      circle_view_width.setColor(color)
-      scaleColorView(image_color_yellow)
-    }
-    image_color_green.setOnClickListener {
-      val color = ResourcesCompat.getColor(resources, R.color.color_green, null)
-      draw_view.setColor(color)
-      circle_view_opacity.setColor(color)
-      circle_view_width.setColor(color)
-      scaleColorView(image_color_green)
-    }
-    image_color_blue.setOnClickListener {
-      val color = ResourcesCompat.getColor(resources, R.color.color_blue, null)
-      draw_view.setColor(color)
-      circle_view_opacity.setColor(color)
-      circle_view_width.setColor(color)
-      scaleColorView(image_color_blue)
-    }
-    image_color_pink.setOnClickListener {
-      val color = ResourcesCompat.getColor(resources, R.color.color_pink, null)
-      draw_view.setColor(color)
-      circle_view_opacity.setColor(color)
-      circle_view_width.setColor(color)
-      scaleColorView(image_color_pink)
-    }
-    image_color_brown.setOnClickListener {
-      val color = ResourcesCompat.getColor(resources, R.color.color_brown, null)
-      draw_view.setColor(color)
-      circle_view_opacity.setColor(color)
-      circle_view_width.setColor(color)
-      scaleColorView(image_color_brown)
-    }
-  }
-
-  private fun scaleColorView(view: View) {
-    //reset scale of all views
-    image_color_black.scaleX = 1f
-    image_color_black.scaleY = 1f
-
-    image_color_red.scaleX = 1f
-    image_color_red.scaleY = 1f
-
-    image_color_yellow.scaleX = 1f
-    image_color_yellow.scaleY = 1f
-
-    image_color_green.scaleX = 1f
-    image_color_green.scaleY = 1f
-
-    image_color_blue.scaleX = 1f
-    image_color_blue.scaleY = 1f
-
-    image_color_pink.scaleX = 1f
-    image_color_pink.scaleY = 1f
-
-    image_color_brown.scaleX = 1f
-    image_color_brown.scaleY = 1f
-
-    //set scale of selected view
-    view.scaleX = 1.5f
-    view.scaleY = 1.5f
   }
 
   private fun setPaintWidth() {

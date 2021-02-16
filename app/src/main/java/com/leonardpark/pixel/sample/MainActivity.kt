@@ -4,12 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.leonardpark.pixel.camera.CameraActivity
 import com.leonardpark.pixel.camera.CameraOptions
 import com.leonardpark.pixel.draw.DrawActivity
@@ -38,7 +36,6 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
     setSupportActionBar(toolbar)
 
-    recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
     adapter = Adapter(this)
     recyclerView.adapter = adapter
 
@@ -50,8 +47,6 @@ class MainActivity : AppCompatActivity() {
       .setExcludeVideos(false)
       .setSpanCount(4)
       .setVideoDurationLimitInSeconds(30)
-      .setScreenOrientation(CameraOptions.SCREEN_ORIENTATION_PORTRAIT)
-      .setPath("Pixel")
 
     fab_camera.setOnClickListener {
       cameraOptions.preSelectedUrls = returnValue
