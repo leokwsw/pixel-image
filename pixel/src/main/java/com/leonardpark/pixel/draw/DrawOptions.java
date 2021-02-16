@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class DrawOptions implements Serializable {
   private int requestCode = 0;
   private String path = "Pixel";
+  private String background = "";
 
   private DrawOptions() {
   }
@@ -40,6 +41,16 @@ public class DrawOptions implements Serializable {
   public DrawOptions setPath(String path) {
     check();
     this.path = path;
+    return this;
+  }
+
+  public String getBackground() {
+    return background;
+  }
+
+  public DrawOptions setBackground(String background) {
+    check();
+    this.background = background;
     return this;
   }
 }

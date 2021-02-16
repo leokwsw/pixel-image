@@ -129,6 +129,9 @@ class CameraActivity : AppCompatActivity() {
     } catch (e: Exception) {
       e.printStackTrace()
     }
+
+    requestedOrientation = options.screenOrientation
+
     maxVideoDuration = options.videoDurationLimitInSeconds * 1000
 
     message_bottom.visibility = if (options.isExcludeVideos) {

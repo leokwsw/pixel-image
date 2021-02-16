@@ -5,12 +5,15 @@ import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
 import android.widget.SeekBar
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.leonardpark.pixel.R
@@ -78,6 +81,18 @@ class DrawActivity : AppCompatActivity() {
       e.printStackTrace()
     }
 
+    if (options.background.isNotEmpty()) {
+      val file = File(options.background)
+      val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+      draw_view.background = RoundedBitmapDrawableFactory.create(resources, bitmap)
+    } else {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        draw_view.setBackgroundColor(resources.getColor(R.color.white, theme))
+      } else {
+        draw_view.setBackgroundColor(resources.getColor(R.color.white))
+      }
+    }
+
     image_close_drawing.setOnClickListener {
       finish()
     }
@@ -107,11 +122,7 @@ class DrawActivity : AppCompatActivity() {
 
     setUpDrawTools()
 
-    colorSelector()
-
-    setPaintAlpha()
-
-    setPaintWidth()
+    setUpSeekBarChange()
   }
 
 
@@ -171,17 +182,7 @@ class DrawActivity : AppCompatActivity() {
       draw_view.redo()
       toggleDrawTools(draw_tools, false)
     }
-  }
 
-  private fun toggleDrawTools(view: View, showView: Boolean = true) {
-    if (showView) {
-      view.animate().translationY((0).toPx)
-    } else {
-      view.animate().translationY((56).toPx)
-    }
-  }
-
-  private fun colorSelector() {
     val imgs = arrayListOf(
       image_color_black,
       image_color_red,
@@ -221,7 +222,15 @@ class DrawActivity : AppCompatActivity() {
     }
   }
 
-  private fun setPaintWidth() {
+  private fun toggleDrawTools(view: View, showView: Boolean = true) {
+    if (showView) {
+      view.animate().translationY((0).toPx)
+    } else {
+      view.animate().translationY((56).toPx)
+    }
+  }
+
+  private fun setUpSeekBarChange() {
     seekBar_width.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
       override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         draw_view.setStrokeWidth(progress.toFloat())
@@ -232,9 +241,7 @@ class DrawActivity : AppCompatActivity() {
 
       override fun onStopTrackingTouch(seekBar: SeekBar?) {}
     })
-  }
 
-  private fun setPaintAlpha() {
     seekBar_opacity.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
       override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         draw_view.setAlpha(progress)

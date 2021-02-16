@@ -5,13 +5,14 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:background="@color/white"
   tools:context=".draw.DrawActivity">
 
   <com.leonardpark.pixel.draw.widget.DrawView
     android:id="@+id/draw_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_white" />
+    android:background="@drawable/ic_done" />
 
   <androidx.appcompat.widget.AppCompatImageView
     android:id="@+id/image_close_drawing"

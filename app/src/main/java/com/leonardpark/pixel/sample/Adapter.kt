@@ -19,7 +19,8 @@ import java.io.IOException
 import java.nio.file.Files
 import java.util.*
 
-class Adapter(private val context: Context) : RecyclerView.Adapter<Adapter.Holder>() {
+class Adapter(private val context: Context, private val callBack: AdapterInterface) :
+  RecyclerView.Adapter<Adapter.Holder>() {
 
   private val list = ArrayList<String>()
 
@@ -67,17 +68,11 @@ class Adapter(private val context: Context) : RecyclerView.Adapter<Adapter.Holde
     view.iv.setImageDrawable(roundedBitmapDrawable)
 
     view.iv.setOnClickListener {
-      val intent = Intent(Intent.ACTION_VIEW, Uri.parse(f.absolutePath))
-      try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-          intent.setDataAndType(Uri.parse(f.absolutePath), Files.probeContentType(f.toPath()))
-        } else {
-          intent.data = Uri.parse(f.absolutePath)
-        }
-      } catch (e: IOException) {
-        e.printStackTrace()
+      if (extension == "mp4" || extension == "mkv") {
+
+      } else {
+        callBack.onImageClicked(f)
       }
-      context.startActivity(intent)
     }
   }
 

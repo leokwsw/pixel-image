@@ -3,6 +3,8 @@ package com.leonardpark.pixel.sample
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -16,6 +18,9 @@ import com.leonardpark.pixel.gallery.GalleryActivity
 import com.leonardpark.pixel.gallery.GalleryOptions
 import com.leonardpark.pixel.utility.PermUtil
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
+import java.io.IOException
+import java.nio.file.Files
 import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
@@ -36,7 +41,25 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
     setSupportActionBar(toolbar)
 
-    adapter = Adapter(this)
+    adapter = Adapter(this, object : AdapterInterface {
+      override fun onImageClicked(f: File) {
+//        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(f.absolutePath))
+//        try {
+//          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            intent.setDataAndType(Uri.parse(f.absolutePath), Files.probeContentType(f.toPath()))
+//          } else {
+//            intent.data = Uri.parse(f.absolutePath)
+//          }
+//        } catch (e: IOException) {
+//          e.printStackTrace()
+//        }
+//        startActivity(intent)
+        DrawActivity.start(
+          this@MainActivity,
+          DrawOptions.init().setBackground(f.absolutePath).setRequestCode(drawRequestCodePicker)
+        )
+      }
+    })
     recyclerView.adapter = adapter
 
     cameraOptions = CameraOptions.init()
@@ -47,6 +70,7 @@ class MainActivity : AppCompatActivity() {
       .setExcludeVideos(false)
       .setSpanCount(4)
       .setVideoDurationLimitInSeconds(30)
+      .setScreenOrientation(CameraOptions.SCREEN_ORIENTATION_PORTRAIT)
 
     fab_camera.setOnClickListener {
       cameraOptions.preSelectedUrls = returnValue
