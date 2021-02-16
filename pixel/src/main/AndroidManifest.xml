@@ -11,10 +11,17 @@
 
   <application>
     <activity
+      android:name=".draw.DrawActivity"
+      android:noHistory="true"
+      android:screenOrientation="portrait"
+      android:theme="@style/Theme.Pixel.NoActionBar" />
+
+    <activity
       android:name=".gallery.GalleryActivity"
       android:noHistory="true"
       android:screenOrientation="portrait"
       android:theme="@style/Theme.Pixel.NoActionBar" />
+
     <activity
       android:name=".camera.CameraActivity"
       android:noHistory="true"

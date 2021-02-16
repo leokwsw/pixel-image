@@ -1,8 +1,11 @@
 package com.leonardpark.pixel.gallery
 
+import android.content.Context
 import android.os.Parcelable
 import android.provider.MediaStore
 import kotlinx.android.parcel.Parcelize
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Parcelize
 data class GalleryData(
@@ -10,10 +13,29 @@ data class GalleryData(
   var albumName: String = "",
   var photoUri: String = "",
   var albumId: Int = 0,
+
   var isSelected: Boolean = false,
   var isEnabled: Boolean = true,
-  var mediaType: Int = MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE,
-  var duration: Int = 0,
+
   var dateAdded: String = "",
-  var thumbnail: String = ""
-) : Parcelable
+  var mediaType: Int = MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
+) : Parcelable {
+  fun getDateDifference(calendar: Calendar): String? {
+    val d = calendar.time
+    val lastMonth = Calendar.getInstance()
+    val lastWeek = Calendar.getInstance()
+    val recent = Calendar.getInstance()
+    lastMonth.add(Calendar.DAY_OF_MONTH, -Calendar.DAY_OF_MONTH)
+    lastWeek.add(Calendar.DAY_OF_MONTH, -7)
+    recent.add(Calendar.DAY_OF_MONTH, -2)
+    return if (calendar.before(lastMonth)) {
+      SimpleDateFormat("MMMM", Locale.getDefault()).format(d)
+    } else if (calendar.after(lastMonth) && calendar.before(lastWeek)) {
+      "Last Month"
+    } else if (calendar.after(lastWeek) && calendar.before(recent)) {
+      "Last Week"
+    } else {
+      "Recent"
+    }
+  }
+}

@@ -14,6 +14,7 @@ class PermUtil {
   companion object {
     const val CAMERA_REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 9921
     const val GALLERY_REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 9922
+    const val DRAW_REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 9933
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private fun addPermission(
@@ -136,6 +137,56 @@ class PermUtil {
           fragment.requestPermissions(
             permissionsList.toTypedArray(),
             GALLERY_REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS
+          )
+        } else {
+          workFinish.onWorkFinish(true)
+        }
+      }
+    }
+
+    fun checkForDrawPermissions(activity: FragmentActivity, workFinish: WorkFinish) {
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        workFinish.onWorkFinish(true)
+      } else {
+        val permissionsNeeded: MutableList<String> = ArrayList()
+        val permissionsList: MutableList<String> = ArrayList()
+
+        if (!addPermission(
+            permissionsList,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            activity
+          )
+        ) permissionsNeeded.add("WRITE_EXTERNAL_STORAGE")
+
+        if (permissionsList.size > 0) {
+          activity.requestPermissions(
+            permissionsList.toTypedArray(),
+            DRAW_REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS
+          )
+        } else {
+          workFinish.onWorkFinish(true)
+        }
+      }
+    }
+
+    fun checkForDrawPermissions(fragment: Fragment, workFinish: WorkFinish) {
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        workFinish.onWorkFinish(true)
+      } else {
+        val permissionsNeeded: MutableList<String> = ArrayList()
+        val permissionsList: MutableList<String> = ArrayList()
+
+        if (!addPermission(
+            permissionsList,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            fragment.activity!!
+          )
+        ) permissionsNeeded.add("WRITE_EXTERNAL_STORAGE")
+
+        if (permissionsList.size > 0) {
+          fragment.requestPermissions(
+            permissionsList.toTypedArray(),
+            DRAW_REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS
           )
         } else {
           workFinish.onWorkFinish(true)

@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.leonardpark.pixel.camera.CameraActivity
 import com.leonardpark.pixel.camera.CameraOptions
+import com.leonardpark.pixel.draw.DrawActivity
+import com.leonardpark.pixel.draw.DrawOptions
 import com.leonardpark.pixel.gallery.GalleryActivity
 import com.leonardpark.pixel.gallery.GalleryOptions
 import com.leonardpark.pixel.utility.PermUtil
@@ -22,9 +24,11 @@ class MainActivity : AppCompatActivity() {
 
   private val cameraRequestCodePicker = 100
   private val galleryRequestCodePicker = 200
+  private val drawRequestCodePicker = 300
 
   private lateinit var cameraOptions: CameraOptions
   private lateinit var galleryOptions: GalleryOptions
+  private lateinit var drawOptions: DrawOptions
 
   private lateinit var adapter: Adapter
   private var returnValue = ArrayList<String>()
@@ -64,6 +68,13 @@ class MainActivity : AppCompatActivity() {
       galleryOptions.preSelectedUrls = returnValue
       GalleryActivity.start(this, galleryOptions)
     }
+
+    drawOptions = DrawOptions.init()
+      .setRequestCode(drawRequestCodePicker)
+
+    fab_draw.setOnClickListener {
+      DrawActivity.start(this, drawOptions)
+    }
   }
 
   override fun onRequestPermissionsResult(
@@ -86,6 +97,13 @@ class MainActivity : AppCompatActivity() {
           Toast.makeText(this, "Approve permissions to open Gallery", Toast.LENGTH_LONG).show()
         }
       }
+      PermUtil.DRAW_REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          DrawActivity.start(this, drawOptions)
+        } else {
+          Toast.makeText(this, "Approve permissions to open Draw", Toast.LENGTH_LONG).show()
+        }
+      }
     }
   }
 
@@ -103,6 +121,13 @@ class MainActivity : AppCompatActivity() {
       galleryRequestCodePicker -> {
         if (resultCode == Activity.RESULT_OK) {
           val returnImage = data?.getStringArrayListExtra(GalleryActivity.IMAGE_RESULTS)!!
+          returnValue.addAll(returnImage)
+          adapter.addImage(returnValue)
+        }
+      }
+      drawRequestCodePicker -> {
+        if (resultCode == Activity.RESULT_OK) {
+          val returnImage = data?.getStringArrayListExtra(DrawActivity.IMAGE_RESULTS)!!
           returnValue.addAll(returnImage)
           adapter.addImage(returnValue)
         }

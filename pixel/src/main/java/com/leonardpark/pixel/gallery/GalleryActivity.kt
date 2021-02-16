@@ -83,23 +83,16 @@ class GalleryActivity : AppCompatActivity() {
     val photoList: ArrayList<GalleryData> = ArrayList()
 
     val imagesCursor = contentResolver.query(
-      MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+      MediaStore.Files.getContentUri("external"),//
       arrayOf(
         MediaStore.Images.Media._ID,
         MediaStore.Images.Media.DATA,
         MediaStore.Images.Media.DATE_ADDED,
-        MediaStore.Files.FileColumns.DATE_ADDED,
-        MediaStore.Files.FileColumns.DATA,
         MediaStore.Files.FileColumns.MEDIA_TYPE,
-        MediaStore.Files.FileColumns._ID,
-        MediaStore.Files.FileColumns.DISPLAY_NAME,
-        MediaStore.Files.FileColumns.TITLE,
-        MediaStore.Files.FileColumns.PARENT,
-        MediaStore.Images.Media.DATE_MODIFIED
       ),
+      MediaStore.Files.FileColumns.MEDIA_TYPE + "=" + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE + " OR " + MediaStore.Files.FileColumns.MEDIA_TYPE + "=" + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO,
       null,
-      null,
-      null
+      MediaStore.Images.Media.DATE_MODIFIED + " DESC"
     )
 
     try {
@@ -108,17 +101,20 @@ class GalleryActivity : AppCompatActivity() {
           val idColumn = imagesCursor.getColumnIndex(MediaStore.Images.Media._ID)
           val dataColumn = imagesCursor.getColumnIndex(MediaStore.Images.Media.DATA)
           val dateAddedColumn = imagesCursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED)
+          val mediaAddedColumn =
+            imagesCursor.getColumnIndex(MediaStore.Files.FileColumns.MEDIA_TYPE)
           do {
             val id = imagesCursor.getString(idColumn)
             val data = imagesCursor.getString(dataColumn)
             val dateAdded = imagesCursor.getString(dateAddedColumn)
+            val mediaAdded = imagesCursor.getInt(mediaAddedColumn)
 
             val galleryData = GalleryData()
             galleryData.albumName = File(data).parentFile!!.name
             galleryData.photoUri = data
             galleryData.id = Integer.valueOf(id)
-            galleryData.mediaType = MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
             galleryData.dateAdded = dateAdded
+            galleryData.mediaType = mediaAdded
 
             if (albumsNames.contains(galleryData.albumName)) {
               for (album in galleryAlbums) {
@@ -160,7 +156,7 @@ class GalleryActivity : AppCompatActivity() {
           object : GalleryInterface {
             override fun onItemClickListener(add: Boolean, uri: String) {
               val img = Img("", "", uri, "", 1)
-              if (add){
+              if (add) {
                 selectionList.add(img)
               } else {
                 selectionList.remove(img)

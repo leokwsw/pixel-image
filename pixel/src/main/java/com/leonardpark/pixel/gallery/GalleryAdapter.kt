@@ -1,12 +1,13 @@
 package com.leonardpark.pixel.gallery
 
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -16,8 +17,11 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.leonardpark.pixel.R
+import kotlinx.android.synthetic.main.dialog_image_details.*
 import kotlinx.android.synthetic.main.item_image.view.*
 import java.io.File
+import java.util.*
+import kotlin.collections.ArrayList
 
 class GalleryAdapter(
   private val context: Context,
@@ -104,7 +108,7 @@ class GalleryAdapter(
     )
 
     holder.itemView.iv_image.setOnClickListener {
-      if(it.isClickable){
+      if (it.isClickable) {
         if (maxSelected != 0) {
           when {
             getSelectedCount() <= maxSelected -> {
@@ -137,7 +141,10 @@ class GalleryAdapter(
               }
             }
             else -> {
-              Log.d("testmo", "getSelectedCount : ${getSelectedCount()} ; maxSelected : $maxSelected")
+              Log.d(
+                "testmo",
+                "getSelectedCount : ${getSelectedCount()} ; maxSelected : $maxSelected"
+              )
             }
           }
         } else {
@@ -154,7 +161,30 @@ class GalleryAdapter(
       }
     }
 
-    // TODO: Dialog
+    var dialog: Dialog? = null
+    holder.itemView.iv_image.setOnLongClickListener {
+      dialog = Dialog(context)
+      if (dialog != null) {
+        val data = copyImageList[position]
+        dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog?.setContentView(R.layout.dialog_image_details)
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        Glide.with(context).load(data.photoUri).into(dialog?.bigimage!!)
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = data.dateAdded.toLong() * 1000
+        dialog?.tv_data!!.text =
+          "Album Name : ${data.albumName} \n Date : ${data.getDateDifference(calendar)}"
+        dialog?.show()
+      }
+      return@setOnLongClickListener true
+    }
+
+    holder.itemView.iv_image.setOnTouchListener { _, event ->
+      if (event.action == MotionEvent.ACTION_UP || event.action == DragEvent.ACTION_DROP) {
+        dialog?.dismiss()
+      }
+      return@setOnTouchListener false
+    }
   }
 
   override fun getItemCount(): Int = copyImageList.size

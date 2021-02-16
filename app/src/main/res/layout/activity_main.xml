@@ -49,9 +49,21 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom|end"
-    android:layout_margin="72dp"
+    android:layout_margin="73dp"
     android:contentDescription="Open Pixel Gallery"
     app:srcCompat="@drawable/ic_galery"
+    tools:ignore="VectorDrawableCompat" />
+
+  <com.google.android.material.floatingactionbutton.FloatingActionButton
+    android:id="@+id/fab_draw"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|end"
+    android:layout_marginEnd="128dp"
+    android:layout_marginRight="128dp"
+    android:layout_marginBottom="16dp"
+    android:contentDescription="Open Pixel Draw"
+    app:srcCompat="@drawable/ic_draw"
     tools:ignore="VectorDrawableCompat" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
