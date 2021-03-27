@@ -19,10 +19,20 @@
       android:theme="@style/Theme.PixelImage.NoActionBar">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
-
+r
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+
+    <provider
+      android:name="androidx.core.content.FileProvider"
+      android:authorities="com.leonardpark.pixel.sample.provider"
+      android:exported="false"
+      android:grantUriPermissions="true">
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/provider_paths" />
+    </provider>
   </application>
 
 </manifest>
