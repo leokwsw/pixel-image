@@ -1,13 +1,16 @@
 package com.leonardpark.pixel.draw.widget
 
 import android.content.Context
-import android.graphics.*
-import androidx.annotation.ColorInt
-import androidx.core.graphics.ColorUtils
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import java.util.LinkedHashMap
+import androidx.annotation.ColorInt
+import androidx.core.graphics.ColorUtils
+import java.util.*
 
 class DrawView @JvmOverloads constructor(
   context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0

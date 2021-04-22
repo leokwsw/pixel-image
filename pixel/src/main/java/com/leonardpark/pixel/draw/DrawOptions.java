@@ -1,7 +1,6 @@
 package com.leonardpark.pixel.draw;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class DrawOptions implements Serializable {
   private int requestCode = 0;

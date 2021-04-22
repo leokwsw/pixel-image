@@ -2,7 +2,6 @@ package com.leonardpark.pixel.draw.widget
 
 import android.graphics.Path
 import java.io.Writer
-import java.security.InvalidParameterException
 
 class Move(val x: Float, val y: Float) : Action {
 

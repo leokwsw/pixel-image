@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.View
 import android.widget.SeekBar
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory

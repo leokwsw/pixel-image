@@ -1,6 +1,5 @@
 package com.leonardpark.pixel.gallery
 
-import android.content.Context
 import android.os.Parcelable
 import android.provider.MediaStore
 import kotlinx.android.parcel.Parcelize

@@ -1,8 +1,6 @@
 package com.leonardpark.pixel.gallery;
 
 import java.io.Serializable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 public class GalleryOptions implements Serializable {

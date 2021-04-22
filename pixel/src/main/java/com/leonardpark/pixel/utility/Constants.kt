@@ -37,14 +37,14 @@ class Constants {
 
     @kotlin.jvm.JvmField
     var IMAGE_VIDEO_SELECTION = (MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-        + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
-        + " OR "
-        + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-        + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)
+      + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
+      + " OR "
+      + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+      + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)
 
     @kotlin.jvm.JvmField
     var IMAGE_SELECTION = (MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-        + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)
+      + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)
 
     @kotlin.jvm.JvmField
     var IMAGE_VIDEO_URI = MediaStore.Files.getContentUri("external")

@@ -28,7 +28,7 @@ class Utility {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
         val w = appCompatActivity.window
         w.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+          or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
         w.setFlags(
           WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
           WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS

@@ -259,8 +259,8 @@ class CameraActivity : AppCompatActivity() {
       addCameraListener(object : CameraListener() {
         override fun onPictureTaken(result: PictureResult) {
           val fileName = "IMG_" +
-              SimpleDateFormat("yyyyMMdd_HHmmSS", Locale.ENGLISH).format(Date()) +
-              ".jpg"
+            SimpleDateFormat("yyyyMMdd_HHmmSS", Locale.ENGLISH).format(Date()) +
+            ".jpg"
           val filePath = "DCIM/" + options.path
 
           val dir = Environment.getExternalStoragePublicDirectory(filePath)
@@ -386,8 +386,8 @@ class CameraActivity : AppCompatActivity() {
 
         camera_view.mode = Mode.VIDEO
         val fileName = "VID_" +
-            SimpleDateFormat("yyyyMMdd_HHmmSS", Locale.ENGLISH).format(Date()) +
-            ".mp4"
+          SimpleDateFormat("yyyyMMdd_HHmmSS", Locale.ENGLISH).format(Date()) +
+          ".mp4"
         val filePath = "DCIM/" + options.path
 
         val dir = Environment.getExternalStoragePublicDirectory(filePath)

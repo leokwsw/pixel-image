@@ -30,9 +30,9 @@
       android:layout_gravity="end"
       android:layout_marginTop="2dp"
       android:layout_marginEnd="2dp"
+      android:layout_marginRight="2dp"
       android:background="@android:color/transparent"
-      android:src="@drawable/ic_new_empty"
-      android:layout_marginRight="2dp" />
+      android:src="@drawable/ic_new_empty" />
 
   </FrameLayout>
 

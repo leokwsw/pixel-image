@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.kotlin
-
 plugins {
   id("com.android.library")
   kotlin("android")
@@ -7,8 +5,8 @@ plugins {
 }
 
 android {
-  compileSdkVersion (AndroidConfig.compileSdk)
-  buildToolsVersion (AndroidConfig.buildTools)
+  compileSdkVersion(AndroidConfig.compileSdk)
+  buildToolsVersion(AndroidConfig.buildTools)
 
   defaultConfig {
     minSdkVersion(AndroidConfig.minSdk)
@@ -43,13 +41,13 @@ dependencies {
   testImplementation("junit:junit:4.13.2")
   androidTestImplementation("androidx.test.ext:junit:1.1.2")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
-  
-  implementation ("androidx.constraintlayout:constraintlayout:2.0.4")
-  implementation ("androidx.legacy:legacy-support-v4:1.0.0")
-  implementation ("androidx.recyclerview:recyclerview:1.2.0")
-  implementation ("androidx.exifinterface:exifinterface:1.3.2")
-  implementation ("com.otaliastudios:cameraview:2.6.2")
-  implementation ("com.github.bumptech.glide:glide:4.12.0")
-  implementation ("androidx.recyclerview:recyclerview:1.2.0")
+
+  implementation("androidx.constraintlayout:constraintlayout:2.0.4")
+  implementation("androidx.legacy:legacy-support-v4:1.0.0")
+  implementation("androidx.recyclerview:recyclerview:1.2.0")
+  implementation("androidx.exifinterface:exifinterface:1.3.2")
+  implementation("com.otaliastudios:cameraview:2.6.2")
+  implementation("com.github.bumptech.glide:glide:4.12.0")
+  implementation("androidx.recyclerview:recyclerview:1.2.0")
 
 }

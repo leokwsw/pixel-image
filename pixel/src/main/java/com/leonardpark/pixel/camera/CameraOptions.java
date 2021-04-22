@@ -6,14 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 public class CameraOptions implements Serializable {
-  private int count = 1;
-  private int requestCode = 0;
-  private int spanCount = 4;
-  private String path = "Pixel";
-  private int height = 0, width = 0;
-  private boolean frontFacing = false;
-  private int videoDurationLimitInSeconds = 40;
-  private boolean excludeVideos = false;
   public static final int SCREEN_ORIENTATION_UNSET = -2;
   public static final int SCREEN_ORIENTATION_UNSPECIFIED = -1;
   public static final int SCREEN_ORIENTATION_LANDSCAPE = 0;
@@ -31,6 +23,14 @@ public class CameraOptions implements Serializable {
   public static final int SCREEN_ORIENTATION_USER_PORTRAIT = 12;
   public static final int SCREEN_ORIENTATION_FULL_USER = 13;
   public static final int SCREEN_ORIENTATION_LOCKED = 14;
+  private int count = 1;
+  private int requestCode = 0;
+  private int spanCount = 4;
+  private String path = "Pixel";
+  private int height = 0, width = 0;
+  private boolean frontFacing = false;
+  private int videoDurationLimitInSeconds = 40;
+  private boolean excludeVideos = false;
   private ArrayList<String> preSelectedUrls = new ArrayList<>();
 
   @ScreenOrientation
@@ -137,10 +137,6 @@ public class CameraOptions implements Serializable {
     return this;
   }
 
-  @Retention(RetentionPolicy.SOURCE)
-  public @interface ScreenOrientation {
-  }
-
   public int getSpanCount() {
     return spanCount;
   }
@@ -152,6 +148,10 @@ public class CameraOptions implements Serializable {
       throw new IllegalArgumentException("span count can not be set below 0 or more than 5");
     }
     return this;
+  }
+
+  @Retention(RetentionPolicy.SOURCE)
+  public @interface ScreenOrientation {
   }
 
 
