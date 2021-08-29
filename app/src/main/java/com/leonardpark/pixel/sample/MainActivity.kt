@@ -123,6 +123,9 @@ class MainActivity : AppCompatActivity() {
           Toast.makeText(this, "Approve permissions to open Draw", Toast.LENGTH_LONG).show()
         }
       }
+      else -> {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+      }
     }
   }
 

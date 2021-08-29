@@ -72,14 +72,14 @@ class PermUtil {
         if (!addPermission(
             permissionsList,
             Manifest.permission.CAMERA,
-            fragment.activity!!
+            fragment.requireActivity()
           )
         ) permissionsNeeded.add("CAMERA")
 
         if (!addPermission(
             permissionsList,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            fragment.activity!!
+            fragment.requireActivity()
           )
         ) permissionsNeeded.add("WRITE_EXTERNAL_STORAGE")
 
@@ -129,7 +129,7 @@ class PermUtil {
         if (!addPermission(
             permissionsList,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            fragment.activity!!
+            fragment.requireActivity()
           )
         ) permissionsNeeded.add("WRITE_EXTERNAL_STORAGE")
 
@@ -179,7 +179,7 @@ class PermUtil {
         if (!addPermission(
             permissionsList,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            fragment.activity!!
+            fragment.requireActivity()
           )
         ) permissionsNeeded.add("WRITE_EXTERNAL_STORAGE")
 

@@ -19,7 +19,7 @@
       android:theme="@style/Theme.PixelImage.NoActionBar">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
-r
+
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
