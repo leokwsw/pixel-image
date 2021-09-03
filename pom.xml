@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.leonardpark.pixel</groupId>
+  <artifactId>pixel-image</artifactId>
+  <version>1.0.6</version>
+  <packaging>pom</packaging>
+  <name>Pixel Image</name>
+
+  <modules>
+    <module>pixel</module>
+  </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.leonardpark.pixel</groupId>
+        <artifactId>pixel-image</artifactId>
+        <version>1.0.6</version>
+        <configuration> <!-- Compile java 7 compatible bytecode -->
+          <source>1.8</source>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
